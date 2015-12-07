@@ -18,7 +18,6 @@ public class ISSCEMouseCaster : MonoBehaviour {
 			RaycastHit hit;
 			Ray r = viewingCamera.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(r,out hit, maskedLayer)){
-				Debug.Log(hit.point);
 				core.UpdateBlockForWorldPosition(hit.point,hit.transform.position);
 			}
 		}

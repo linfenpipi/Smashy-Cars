@@ -7,6 +7,14 @@ public class ISSCEditorUserInterface : MonoBehaviour {
 	public InputField blockSelector;
 	public ISSCBEditorCore core;
 
+	public void ChangeToPlacingState(){
+		core.state = ISSCBEditorState.Placing;
+	}
+
+	public void ChangeToDeletingState(){
+		core.state = ISSCBEditorState.Deleting;
+	}
+
 	public void FillingBlockSelectorValueChange(string newValue){
 		core.currentFillingBlock = int.Parse (blockSelector.text);
 	}

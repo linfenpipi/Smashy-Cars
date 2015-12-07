@@ -65,12 +65,10 @@ public class ISSCBGridController : MonoBehaviour
 			if(data[i] == versionDataCache[i]) continue;
 
 			ISSCBlockVector b = gridData.DecodeIndex(i);
+
+			if (blockObjects [i]) ISObjectPoolManager.Unspawn (blockObjects [i]);
 			if(data[i] <= 1) continue;
 			if(!gridData.IsBlockVisiable(b)) continue;
-
-			if (blockObjects [i]) {
-				ISObjectPoolManager.Unspawn (blockObjects [i]);
-			}
 
 			Vector3 position = ISSCBGrid.GridPositionToWorldPosition (b, transform.position);
 			blockObjects [i] = ISObjectPoolManager.Spawn (blockList.blocks [data [i]].gameObject, position, Quaternion.identity) as GameObject;
