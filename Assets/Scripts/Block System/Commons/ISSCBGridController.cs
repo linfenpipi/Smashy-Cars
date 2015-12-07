@@ -63,6 +63,7 @@ public class ISSCBGridController : MonoBehaviour
 
 		for (int i = 0; i < data.Length; i++) {
 			if(data[i] == versionDataCache[i]) continue;
+			versionDataCache[i] = data[i];
 
 			ISSCBlockVector b = gridData.DecodeIndex(i);
 
@@ -72,8 +73,6 @@ public class ISSCBGridController : MonoBehaviour
 
 			Vector3 position = ISSCBGrid.GridPositionToWorldPosition (b, transform.position);
 			blockObjects [i] = ISObjectPoolManager.Spawn (blockList.blocks [data [i]].gameObject, position, Quaternion.identity) as GameObject;
-
-			versionDataCache[i] = data[i];
 		}
 
 		currentVersion = versionCheckResult;
