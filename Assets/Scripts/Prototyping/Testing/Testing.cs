@@ -6,7 +6,7 @@ public class Testing : MonoBehaviour {
 	public int testNumber;
 
 	void Start () {
-		ISSCBGrid grid = new ISSCBGrid (new ISSCBlockVector(10,10,10));
+//		ISSCBGrid grid = new ISSCBGrid (new ISSCBlockVector(10,10,10));
 
 
 		/*

@@ -37,15 +37,15 @@ public class ISSCBEditorCore : MonoBehaviour {
 		moniter.SwitchData (data);
 	}
 
-	public void UpdateBlockForWorldPosition(Vector3 hitPoint, Vector3 hittedBlockPosition){
+	public void UpdateBlockForWorldPosition(Vector3 hitPoint, Vector3 hittedBlockPosition , Transform ts){
 		ISSCBlockVector bv = ISSCBlockVector.zero;
 		int fb = currentFillingBlock;
 
 		switch (state) {
 		case ISSCBEditorState.Placing:
 			Vector3 dir = hitPoint - hittedBlockPosition;
-			dir = ISMath.Clip2NormalDirection (dir);
-			bv = ISSCBGrid.WorldPositionToGridPosition (hittedBlockPosition + dir.normalized,moniter.transform.position);
+			dir = ISMath.Clip2NormalDirectionV2 (dir,ts);
+			bv = ISSCBGrid.WorldPositionToGridPosition (dir+ts.position,moniter.transform.position);
 			break;
 
 		case ISSCBEditorState.Deleting:
