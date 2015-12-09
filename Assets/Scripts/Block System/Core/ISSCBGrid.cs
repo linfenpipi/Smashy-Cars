@@ -7,10 +7,26 @@ public class ISSCBGrid : Object
 	public static readonly float ISSC_BLOCK_UNIT_SIZE = 1;
 
 	public readonly ISSCBlockVector gridSize;
+	public string name;
 
 	protected int[] blocks;
 
-	int version = 0; //Store the version code
+	int version = 0; //Stores the version code
+
+	public static Vector3 GridPositionToWorldPosition (ISSCBlockVector position, Vector3 gridOriginInWorld)
+	{
+		return new Vector3 (gridOriginInWorld.x + position.x * ISSC_BLOCK_UNIT_SIZE,
+			gridOriginInWorld.y + position.y * ISSC_BLOCK_UNIT_SIZE,
+			gridOriginInWorld.z + position.z * ISSC_BLOCK_UNIT_SIZE);
+	}
+
+	public static ISSCBlockVector WorldPositionToGridPosition (Vector3 position, Vector3 gridOriginInWorld)
+	{
+		float f = ISSC_BLOCK_UNIT_SIZE;
+		ISSCBlockVector v = new ISSCBlockVector (gridOriginInWorld.x + position.x / f, gridOriginInWorld.y + position.y / f, gridOriginInWorld.z + position.z / f);
+
+		return v;
+	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ISSCBGrid"/> class with specific size.
@@ -315,23 +331,6 @@ public class ISSCBGrid : Object
 			}
 		}
 		return l.ToArray ();
-	}
-	
-	//-L 12051052
-	public static Vector3 GridPositionToWorldPosition (ISSCBlockVector position, Vector3 gridOriginInWorld)
-	{
-		return new Vector3 (gridOriginInWorld.x + position.x * ISSC_BLOCK_UNIT_SIZE,
-							gridOriginInWorld.y + position.y * ISSC_BLOCK_UNIT_SIZE,
-							gridOriginInWorld.z + position.z * ISSC_BLOCK_UNIT_SIZE);
-	
-	}
-
-	public static ISSCBlockVector WorldPositionToGridPosition (Vector3 position, Vector3 gridOriginInWorld)
-	{
-		float f = ISSC_BLOCK_UNIT_SIZE;
-		ISSCBlockVector v = new ISSCBlockVector (gridOriginInWorld.x + position.x / f, gridOriginInWorld.y + position.y / f, gridOriginInWorld.z + position.z / f);
-
-		return v;
 	}
 }
 

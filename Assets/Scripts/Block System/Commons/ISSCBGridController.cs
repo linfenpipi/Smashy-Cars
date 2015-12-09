@@ -25,31 +25,15 @@ public class ISSCBGridController : MonoBehaviour
 
 	void Update(){
 		if(updateDataEachFrame) UpdateSceneWithData ();
-		//testSetRandomBlock ();
 	}
 
 	public void SwitchData(ISSCBGrid newDataSet){
 		gridData = newDataSet;
-		currentVersion = 0;
+		currentVersion = -1;
 		versionDataCache = new int[newDataSet.GetRawData().Length];
 		UpdateSceneWithData ();
 
 		Debug.Log("data switched...");
-	}
-	
-	void Save(){
-		string[] dirs = {"Resources","SaveData"};
-		string str = ISSCDIO.GetDataPath(dirs);
-		string json = ISSCDIO.SavaAllModulesAsJsonString(gridData);
-		ISSCDIO.SaveDataIntoFile(str,"test03",json,"scb");
-	}
-	
-	ISSCBGrid Load(){
-		string[] dirs = {"Resources","SaveData"};
-		string str = ISSCDIO.GetDataPath(dirs);
-		Debug.Log(str);
-		return ISSCDIO.LoadFileToGrid(str,"test03.scb");
-
 	}
 
 	void UpdateSceneWithData ()
@@ -77,16 +61,4 @@ public class ISSCBGridController : MonoBehaviour
 
 		currentVersion = versionCheckResult;
 	}
-	
-	public void test ()
-	{
-		ISSCGridPrimitiveShapeUtilities.CreateSphere (gridData, gridData.GetCenterBlock(), 2, 9);
-//		ISSCGridPrimitiveShapeUtilities.CreateCylinder (gridData, 2, gridData.GetCenterBlock (), 5, 9);
-	}
-
-	public void testSetRandomBlock(){
-		gridData.SetBlock (new ISSCBlockVector (Random.Range (0, 20), Random.Range (0, 20), Random.Range (0, 20)), Random.Range (0, 6));
-	
-	}
-	
 }

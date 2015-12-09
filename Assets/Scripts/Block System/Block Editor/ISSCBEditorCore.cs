@@ -23,16 +23,25 @@ public class ISSCBEditorCore : MonoBehaviour {
 		caster.core = this;
 	}
 
-	public void NewScene(ISSCBlockVector size){
-		data = new ISSCBGrid (size);
-		data.SetBlock (data.GetCenterBlock (), rootBlock);
-		Debug.Log("New Scene Created");
+	public void SaveCurrentScene(string path){
+		ISSCDGridFileUtilities.CreateFile (data, path);
+	}
+
+	public void OpenScene(string path){
+		OpenScene (ISSCDGridFileUtilities.LoadFromFile (path));
+	}
+
+	public void OpenScene(ISSCBGrid newDataSet){
+		data = newDataSet;
 		editorCamera.SetViewPoint (ISSCBGrid.GridPositionToWorldPosition(data.GetCenterBlock (), moniter.transform.position));
 		moniter.SwitchData (data);
 	}
 
-	public void OpenDataSet(ISSCBGrid newDataSet){
-		data = newDataSet;
+	public void NewScene(ISSCBlockVector size, string name){
+		data = new ISSCBGrid (size);
+		data.name = name;
+		data.SetBlock (data.GetCenterBlock (), rootBlock);
+		Debug.Log("New Scene Created");
 		editorCamera.SetViewPoint (ISSCBGrid.GridPositionToWorldPosition(data.GetCenterBlock (), moniter.transform.position));
 		moniter.SwitchData (data);
 	}

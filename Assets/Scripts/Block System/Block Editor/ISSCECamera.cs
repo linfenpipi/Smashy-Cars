@@ -5,6 +5,7 @@ public class ISSCECamera : MonoBehaviour {
 
 	public Vector3 viewPoint;
 	public Transform cameraChild;
+	public float rotateDamper;
 	public float rotateSpeed;
 	public float scaleSpeed;
 	public float minDistance;
@@ -37,7 +38,6 @@ public class ISSCECamera : MonoBehaviour {
 		if (Input.GetMouseButton (1)) {
 			currentRotation.x += mouseDelta.y * rotateSpeed * Time.deltaTime;
 			currentRotation.y += mouseDelta.x * rotateSpeed * Time.deltaTime;
-
 		}
 
 		//Calculate wanted scale/child camera position based on scroll wheel delta.
@@ -46,7 +46,8 @@ public class ISSCECamera : MonoBehaviour {
 
 		//Apply wanted values to camera
 		transform.position = viewPoint;
-		transform.eulerAngles = currentRotation;
+		Quaternion wantRot = Quaternion.Euler (currentRotation);
+		transform.rotation = Quaternion.Slerp (transform.rotation, wantRot, rotateDamper * Time.deltaTime);;
 		cameraChild.localPosition = new Vector3 (0, 0, currentScale);
 	}
 }

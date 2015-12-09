@@ -20,6 +20,15 @@ public class ISSCEditorUserInterface : MonoBehaviour {
 	}
 
 	public void NewScene(){
-		core.NewScene (new ISSCBlockVector (21, 21, 21));
+		core.NewScene (new ISSCBlockVector (21, 21, 21),"NewScene");
+	}
+
+	public void Save(){
+		core.SaveCurrentScene (Application.dataPath + "/Resources/SavedDatas/slot1");
+		Debug.Log (Application.dataPath + "Resources/SavedDatas/slot1");
+	}
+
+	public void Load(){
+		core.OpenScene (Application.dataPath + "/Resources/SavedDatas/slot1");
 	}
 }
