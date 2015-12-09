@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ISSCECommandLineTools : MonoBehaviour {
+public class ISSCECommandLineTools : MonoBehaviour
+{
 
 	public ISSCBEditorCore core;
 
-	public void Submit(string command){
+	public void Submit (string command)
+	{
 		if (command.StartsWith ("select block")) {
 			string argu = command.Substring (12);
 			core.currentFillingBlock = int.Parse (argu);
@@ -13,38 +15,55 @@ public class ISSCECommandLineTools : MonoBehaviour {
 			string argu = command.Substring (2);
 			core.currentFillingBlock = int.Parse (argu);
 		} else if (command.StartsWith ("save")) {
-			string argu = command.Substring (command.IndexOf("\"") + 1,command.LastIndexOf("\"") - command.IndexOf("\"") - 1);
+			string argu = command.Substring (command.IndexOf ("\"") + 1, command.LastIndexOf ("\"") - command.IndexOf ("\"") - 1);
 			core.SaveCurrentScene (Application.dataPath + "/Resources/SavedDatas/" + argu);
 		} else if (command.StartsWith ("load")) {
-			string argu = command.Substring (command.IndexOf("\"") + 1,command.LastIndexOf("\"") - command.IndexOf("\"") - 1);
+			string argu = command.Substring (command.IndexOf ("\"") + 1, command.LastIndexOf ("\"") - command.IndexOf ("\"") - 1);
 			core.OpenScene (Application.dataPath + "/Resources/SavedDatas/" + argu);
 		} else if (command.StartsWith ("new")) {
-			string argu = command.Substring (command.IndexOf("\"") + 1,command.LastIndexOf("\"") - command.IndexOf("\"") - 1);
+			string argu = command.Substring (command.IndexOf ("\"") + 1, command.LastIndexOf ("\"") - command.IndexOf ("\"") - 1);
 			core.NewScene (new ISSCBlockVector (21, 21, 21), argu);
 		} else if (command.StartsWith ("sphere")) {
-			string[] argus = ParseArguments(command);
+			string[] argus = ParseArguments (command);
 			ISSCBlockVector center = ParseBlockVector (argus [0]);
 			int r = int.Parse (argus [1]);
-			int fillingBlock = int.Parse(argus[2]);
+			int fillingBlock = int.Parse (argus [2]);
 
 			ISSCGridPrimitiveShapeUtilities.CreateSphere (core.data, center, fillingBlock, r);
 		} else if (command.StartsWith ("cube")) {
-			string[] argus = ParseArguments(command);
+			string[] argus = ParseArguments (command);
 			ISSCBlockVector a = ParseBlockVector (argus [0]);
 			ISSCBlockVector b = ParseBlockVector (argus [1]);
-			int fillingBlock = int.Parse(argus[2]);
+			int fillingBlock = int.Parse (argus [2]);
 
 			ISSCGridPrimitiveShapeUtilities.CreateCube (core.data, fillingBlock, a, b);
+		} else if (command.StartsWith ("switch")) {
+			string[] argus = ParseArguments (command);
+			switch (argus [0]) {
+			case "placing":
+				core.state = ISSCBEditorState.Placing;
+				break;
+			case "deleting":
+				core.state = ISSCBEditorState.Deleting;
+				break;
+			case "selecting":
+				core.state = ISSCBEditorState.Selecting;
+				break;
+			}
 		}
 	}
 
-	void Start(){
+	void Start ()
+	{
 	}
 
-	string[] ParseArguments(string command){
+	string[] ParseArguments (string command)
+	{
 		char[] ca = command.ToCharArray ();
 		int count = 0;
-		for (int i = 0; i < ca.Length; i++) if(ca[i] == '-') count++;
+		for (int i = 0; i < ca.Length; i++)
+			if (ca [i] == '-')
+				count++;
 
 		string[] argus = new string[count];
 		string tempString = string.Empty;
@@ -52,19 +71,23 @@ public class ISSCECommandLineTools : MonoBehaviour {
 
 		for (int i = 0; i < ca.Length; i++) {
 			if (ca [i] == '-') {
-				if(count >= 0)argus [count] = tempString;
+				if (count >= 0)
+					argus [count] = tempString;
 				tempString = string.Empty;
 				count++;
 			} else {
-				if(count >= 0)tempString += ca [i].ToString ();
+				if (count >= 0)
+					tempString += ca [i].ToString ();
 			}
 		}
-		if(count >= 0)argus [count] = tempString;
+		if (count >= 0)
+			argus [count] = tempString;
 
 		return argus;
 	}
 
-	ISSCBlockVector ParseBlockVector(string vectorString){
+	ISSCBlockVector ParseBlockVector (string vectorString)
+	{
 		string sub = vectorString;
 
 		string x = sub.Substring (0, sub.IndexOf (","));
