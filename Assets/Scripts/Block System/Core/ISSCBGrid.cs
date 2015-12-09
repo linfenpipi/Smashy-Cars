@@ -72,12 +72,21 @@ public class ISSCBGrid : Object
 
 		return result;
 	}
-	
+
+	ISSCBlockVector EnsureSafeAccess2Data(ISSCBlockVector point){
+		point.x = Mathf.Clamp (point.x, 0, gridSize.x - 1);
+		point.y = Mathf.Clamp (point.y, 0, gridSize.y - 1);
+		point.z = Mathf.Clamp (point.z, 0, gridSize.z - 1);
+
+		return point;
+	}
+
 	public int EncodeIndex (ISSCBlockVector position)
 	{
-		int xIndex = position.x;
-		int yIndex = position.y * gridSize.x;
-		int zIndex = position.z * gridSize.x * gridSize.y;
+		ISSCBlockVector v = EnsureSafeAccess2Data (position);
+		int xIndex = v.x;
+		int yIndex = v.y * gridSize.x;
+		int zIndex = v.z * gridSize.x * gridSize.y;
 		return xIndex + yIndex + zIndex;
 	}
 
