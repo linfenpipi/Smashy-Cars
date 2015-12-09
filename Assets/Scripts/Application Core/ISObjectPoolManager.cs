@@ -105,6 +105,7 @@ public class ISObjectPoolManager : MonoBehaviour {
 	}
 	
 	static public GameObject Spawn(GameObject obj, Vector3 pos, Quaternion rot){
+		return Instantiate (obj, pos, rot) as GameObject;
 		GameObject spawnObj;
 		
 		int ID=CheckIfObjectExist(obj);
@@ -138,7 +139,7 @@ public class ISObjectPoolManager : MonoBehaviour {
 	}
 	
 	static public void Unspawn(GameObject obj){
-		
+		Destroy (obj);return;
 		int ID=CheckIfObjectIsTagged(obj);
 		
 		#if UNITY_EDITOR

@@ -239,7 +239,7 @@ public class ISSCBGrid : Object
 		}
 	}
 
-	public ISSCBlockVector GetBlockNearBy (ISSCBlockVector position, BlockDirection direction)
+	public ISSCBlockVector SurroundingBlock (ISSCBlockVector position, BlockDirection direction)
 	{
 		ISSCBlockVector tmpBV = new ISSCBlockVector ();
 		tmpBV = position;
@@ -266,10 +266,24 @@ public class ISSCBGrid : Object
 		return tmpBV;
 	}
 
+	public ISSCBlockVector[] SurroundingBlocks (ISSCBlockVector position)
+	{
+		ISSCBlockVector[] bs = new ISSCBlockVector[6];
+
+		bs [0] = position + ISSCBlockVector.up;
+		bs [1] = position + ISSCBlockVector.down;
+		bs [2] = position + ISSCBlockVector.forward;
+		bs [3] = position + ISSCBlockVector.back;
+		bs [4] = position + ISSCBlockVector.right;
+		bs [5] = position + ISSCBlockVector.left;
+
+		return bs;
+	}
+
 	public ISSCBlockVector ClosestEmptyBlock(ISSCBlockVector position){
 		for (int i = 0; i < 6; i++) {
 			if(IsNearByEmpty(position,(BlockDirection)i)){
-				return GetBlockNearBy(position,(BlockDirection)i);
+				return SurroundingBlock(position,(BlockDirection)i);
 			}
 		}
 

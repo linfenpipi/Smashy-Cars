@@ -24,19 +24,19 @@ public class ISSCBGridController : MonoBehaviour
 	}
 
 	void Update(){
-		if(updateDataEachFrame) UpdateSceneWithData ();
+		if(updateDataEachFrame) UpdateEntireScene ();
 	}
 
-	public void SwitchData(ISSCBGrid newDataSet){
+	public void SwitchDataSet(ISSCBGrid newDataSet){
 		gridData = newDataSet;
 		currentVersion = -1;
-		versionDataCache = new int[newDataSet.GetRawData().Length];
-		UpdateSceneWithData ();
+		ClearNCreateNewInSceneCaches (gridData.gridSize.Length ());
+		UpdateEntireScene ();
 
 		Debug.Log("data switched...");
 	}
 
-	void UpdateSceneWithData ()
+	void UpdateEntireScene ()
 	{
 		int versionCheckResult = gridData.IsLastestVersion (currentVersion);
 		if(versionCheckResult == -1) return;
@@ -47,6 +47,10 @@ public class ISSCBGridController : MonoBehaviour
 
 		for (int i = 0; i < data.Length; i++) {
 			if(data[i] == versionDataCache[i]) continue;
+
+			//Once a block is changed(otherwise, loop is continued), check the surrounding blocks and see if some of them also need to be updated.
+			UpdateBlocksCacheIgroned(gridData.SurroundingBlocks(gridData.DecodeIndex(i)));
+
 			versionDataCache[i] = data[i];
 
 			ISSCBlockVector b = gridData.DecodeIndex(i);
@@ -60,5 +64,35 @@ public class ISSCBGridController : MonoBehaviour
 		}
 
 		currentVersion = versionCheckResult;
+	}
+
+	public void UpdateBlocksCacheIgroned(ISSCBlockVector[] blocks){
+		for (int i = 0; i < blocks.Length; i++) {
+			UpdateBlockCacheIgroned (blocks [i]);
+		}
+	}
+
+	public void UpdateBlockCacheIgroned(ISSCBlockVector block){
+		int id = gridData.EncodeIndex (block);
+
+		if (blockObjects [id]) ISObjectPoolManager.Unspawn (blockObjects [id]);
+
+		if(!gridData.IsBlockVisiable(block)) return;
+		int[] data = gridData.GetRawData ();
+
+		if(data[id] <= 1) return;
+
+		Vector3 position = ISSCBGrid.GridPositionToWorldPosition (block, transform.position);
+		blockObjects [id] = ISObjectPoolManager.Spawn (blockList.blocks [data [id]].gameObject, position, Quaternion.identity) as GameObject;
+	}
+
+	void ClearNCreateNewInSceneCaches(int newLength){
+		versionDataCache = new int[newLength];
+
+		for (int i = 0; i < blockObjects.Length; i++) {
+			if(blockObjects[i])ISObjectPoolManager.Unspawn (blockObjects [i]);
+		}
+
+		blockObjects = new GameObject[newLength];
 	}
 }

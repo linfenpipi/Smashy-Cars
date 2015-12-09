@@ -34,7 +34,7 @@ public class ISSCBEditorCore : MonoBehaviour {
 	public void OpenScene(ISSCBGrid newDataSet){
 		data = newDataSet;
 		editorCamera.SetViewPoint (ISSCBGrid.GridPositionToWorldPosition(data.GetCenterBlock (), moniter.transform.position));
-		moniter.SwitchData (data);
+		moniter.SwitchDataSet (data);
 	}
 
 	public void NewScene(ISSCBlockVector size, string name){
@@ -43,7 +43,7 @@ public class ISSCBEditorCore : MonoBehaviour {
 		data.SetBlock (data.GetCenterBlock (), rootBlock);
 		Debug.Log("New Scene Created");
 		editorCamera.SetViewPoint (ISSCBGrid.GridPositionToWorldPosition(data.GetCenterBlock (), moniter.transform.position));
-		moniter.SwitchData (data);
+		moniter.SwitchDataSet (data);
 	}
 
 	public void UpdateBlockForWorldPosition(Vector3 hitPoint, Vector3 hittedBlockPosition , Transform ts){
