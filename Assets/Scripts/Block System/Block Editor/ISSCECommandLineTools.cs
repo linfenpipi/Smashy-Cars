@@ -21,14 +21,14 @@ public class ISSCECommandLineTools : MonoBehaviour {
 		} else if (command.StartsWith ("new")) {
 			string argu = command.Substring (command.IndexOf("\"") + 1,command.LastIndexOf("\"") - command.IndexOf("\"") - 1);
 			core.NewScene (new ISSCBlockVector (21, 21, 21), argu);
-		} else if (command.StartsWith ("sphere")) { //sphere -position "x,y,z" -r "1" -b id
+		} else if (command.StartsWith ("sphere")) {
 			string[] argus = ParseArguments(command);
 			ISSCBlockVector center = ParseBlockVector (argus [0]);
 			int r = int.Parse (argus [1]);
 			int fillingBlock = int.Parse(argus[2]);
 
 			ISSCGridPrimitiveShapeUtilities.CreateSphere (core.data, center, fillingBlock, r);
-		} else if (command.StartsWith ("cube")) { //sphere -position "x,y,z" -r "1" -b id
+		} else if (command.StartsWith ("cube")) {
 			string[] argus = ParseArguments(command);
 			ISSCBlockVector a = ParseBlockVector (argus [0]);
 			ISSCBlockVector b = ParseBlockVector (argus [1]);
