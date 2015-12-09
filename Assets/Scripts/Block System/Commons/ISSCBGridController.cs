@@ -17,6 +17,9 @@ public class ISSCBGridController : MonoBehaviour
 	void Start ()
 	{
 		blockList = ISSCDBlocksList.LoadList ();
+
+		for (int i = 0; i < blockList.blocks.Length; i++) ISObjectPoolManager.New (blockList.blocks [i].gameObject,1);
+
 		gridData = new ISSCBGrid (grid);
 		int length = gridData.gridSize.Length ();
 		blockObjects = new GameObject[length];

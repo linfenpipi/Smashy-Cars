@@ -112,7 +112,6 @@ public class ISObjectPoolManager : MonoBehaviour {
 		
 		if(ID==-1){
 			Debug.Log("Object "+obj+" doesnt exsit in ObjectPoolManager List.");
-			ISObjectPoolManager.New(obj,1);
 			return (GameObject)Instantiate(obj, pos, rot);
 		}
 		else{
@@ -139,7 +138,7 @@ public class ISObjectPoolManager : MonoBehaviour {
 	}
 	
 	static public void Unspawn(GameObject obj){
-		Destroy (obj);return;
+		Destroy (obj); return;
 		int ID=CheckIfObjectIsTagged(obj);
 		
 		#if UNITY_EDITOR
@@ -254,6 +253,7 @@ public class Pool {
 		GameObject spawnObj;
 		if(available.Count>0){
 			spawnObj=available[0];
+			if (spawnObj.activeSelf) Debug.LogError ("Pool Fatal Error : Unknown");
 			available.RemoveAt(0);
 
 			if(spawnObj == null){
@@ -318,7 +318,6 @@ public class Pool {
 	}
 	
 	public List<GameObject> GetFullList(){
-		Debug.Log("getting list, list length= "+allObject.Count);
 		return allObject;
 	}
 }
