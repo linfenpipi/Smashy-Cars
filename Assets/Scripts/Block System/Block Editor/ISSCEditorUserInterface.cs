@@ -5,6 +5,7 @@ using System.Collections;
 public class ISSCEditorUserInterface : MonoBehaviour {
 
 	public InputField blockSelector;
+	public ISSCECommandLineTools clt;
 	public ISSCBEditorCore core;
 
 	public void ChangeToPlacingState(){
@@ -18,22 +19,7 @@ public class ISSCEditorUserInterface : MonoBehaviour {
 	public void Return(string v){
 		string command = blockSelector.text;
 
-		if (command.StartsWith ("select block")) {
-			string argu = command.Substring (12);
-			core.currentFillingBlock = int.Parse (argu);
-		} else if (command.StartsWith ("sb")) {
-			string argu = command.Substring (2);
-			core.currentFillingBlock = int.Parse (argu);
-		} else if (command.StartsWith ("save")) {
-			string argu = command.Substring (command.IndexOf("\"") + 1,command.LastIndexOf("\"") - command.IndexOf("\"") - 1);
-			core.SaveCurrentScene (Application.dataPath + "/Resources/SavedDatas/" + argu);
-		} else if (command.StartsWith ("load")) {
-			string argu = command.Substring (command.IndexOf("\"") + 1,command.LastIndexOf("\"") - command.IndexOf("\"") - 1);
-			core.OpenScene (Application.dataPath + "/Resources/SavedDatas/" + argu);
-		} else if (command.StartsWith ("new")) {
-			string argu = command.Substring (command.IndexOf("\"") + 1,command.LastIndexOf("\"") - command.IndexOf("\"") - 1);
-			core.NewScene (new ISSCBlockVector (21, 21, 21), argu);
-		}
+		clt.Submit (blockSelector.text);
 
 		Debug.Log ("Command Accepted... " + command);
 		blockSelector.text = "";

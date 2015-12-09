@@ -24,8 +24,7 @@ public class ISSCBEditorCore : MonoBehaviour {
 	}
 
 	public void SaveCurrentScene(string path){
-		if (data) ISSCDGridFileUtilities.CreateFile (data, path);
-		else Debug.Log ("Fails to save scene because none of scene is loaded.");
+		ISSCDGridFileUtilities.CreateFile (data, path);
 	}
 
 	public void OpenScene(string path){
