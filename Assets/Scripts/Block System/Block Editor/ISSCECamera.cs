@@ -47,7 +47,7 @@ public class ISSCECamera : MonoBehaviour {
 		//Apply wanted values to camera
 		transform.position = viewPoint;
 		Quaternion wantRot = Quaternion.Euler (currentRotation);
-		transform.rotation = Quaternion.Slerp (transform.rotation, wantRot, rotateDamper * Time.deltaTime);;
+		transform.rotation = Quaternion.Slerp (transform.rotation, wantRot, rotateDamper * Time.deltaTime);
 		cameraChild.localPosition = new Vector3 (0, 0, currentScale);
 	}
 }

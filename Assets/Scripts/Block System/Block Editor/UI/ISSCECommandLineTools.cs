@@ -52,11 +52,8 @@ public class ISSCECommandLineTools : MonoBehaviour
 			}
 		}
 	}
-
-	void Start ()
-	{
-	}
-
+		
+	// -example -example2
 	string[] ParseArguments (string command)
 	{
 		char[] ca = command.ToCharArray ();
@@ -86,6 +83,7 @@ public class ISSCECommandLineTools : MonoBehaviour
 		return argus;
 	}
 
+	// x,y,z
 	ISSCBlockVector ParseBlockVector (string vectorString)
 	{
 		string sub = vectorString;

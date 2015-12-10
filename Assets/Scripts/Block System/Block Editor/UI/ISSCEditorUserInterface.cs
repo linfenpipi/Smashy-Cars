@@ -5,7 +5,9 @@ using System.Collections;
 
 public class ISSCEditorUserInterface : MonoBehaviour
 {
-
+	public GameObject mainScreenObject;
+	public ISSCEUIFilePanel filePanel;
+	public Text title;
 	public InputField blockSelector;
 	public ISSCECommandLineTools clt;
 	public ISSCBEditorCore core;
@@ -84,6 +86,7 @@ public class ISSCEditorUserInterface : MonoBehaviour
 	public void NewScene ()
 	{
 		core.NewScene (new ISSCBlockVector (21, 21, 21), "NewScene");
+		title.text = "BE 0.2.3 :" + core.data.name;
 	}
 
 	public void Save ()
@@ -95,5 +98,21 @@ public class ISSCEditorUserInterface : MonoBehaviour
 	public void Load ()
 	{
 		core.OpenScene (Application.dataPath + "/Resources/SavedDatas/slot1");
+		title.text = "BE 0.2.3 :" + core.data.name;
+	}
+
+	public void ShowMainScreen(){
+		mainScreenObject.SetActive (true);
+		filePanel.HidePanel ();
+	}
+
+	public void ShowSavePanel(){
+		mainScreenObject.SetActive (false);
+		filePanel.ShowPanel (true);
+	}
+
+	public void ShowOpenPanel(){
+		mainScreenObject.SetActive (false);
+		filePanel.ShowPanel (false);
 	}
 }
