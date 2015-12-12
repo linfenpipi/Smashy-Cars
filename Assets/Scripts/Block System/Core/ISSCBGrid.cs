@@ -11,7 +11,8 @@ public class ISSCBGrid : Object
 
 	protected int[] blocks;
 
-	int version = 0; //Stores the version code
+	int version = 0;
+	//Stores the version code
 
 	public static Vector3 GridPositionToWorldPosition (ISSCBlockVector position, Vector3 gridOriginInWorld)
 	{
@@ -45,7 +46,7 @@ public class ISSCBGrid : Object
 
 		blocks = new int[gridSize.Length ()];
 	}
-	
+
 	public ISSCBGrid (ISSCBGridDescriber describer)
 	{
 		gridSize = describer.size;
@@ -67,13 +68,14 @@ public class ISSCBGrid : Object
 	public bool IsBlockAvailable (ISSCBlockVector position)
 	{
 		bool result = ISMath.Contains (position.x, 0, gridSize.x)
-			&& ISMath.Contains (position.y, 0, gridSize.y)
-			&& ISMath.Contains (position.z, 0, gridSize.z);
+		              && ISMath.Contains (position.y, 0, gridSize.y)
+		              && ISMath.Contains (position.z, 0, gridSize.z);
 
 		return result;
 	}
 
-	ISSCBlockVector EnsureSafeAccess2Data(ISSCBlockVector point){
+	ISSCBlockVector EnsureSafeAccess2Data (ISSCBlockVector point)
+	{
 		point.x = Mathf.Clamp (point.x, 0, gridSize.x - 1);
 		point.y = Mathf.Clamp (point.y, 0, gridSize.y - 1);
 		point.z = Mathf.Clamp (point.z, 0, gridSize.z - 1);
@@ -205,7 +207,7 @@ public class ISSCBGrid : Object
 			return false;
 		}
 	}
-	
+
 	public bool IsBlockVisiable (ISSCBlockVector position)
 	{
 		for (int i = 0; i < 6; i++) {
@@ -289,10 +291,11 @@ public class ISSCBGrid : Object
 		return bs;
 	}
 
-	public ISSCBlockVector ClosestEmptyBlock(ISSCBlockVector position){
+	public ISSCBlockVector ClosestEmptyBlock (ISSCBlockVector position)
+	{
 		for (int i = 0; i < 6; i++) {
-			if(IsNearByEmpty(position,(BlockDirection)i)){
-				return SurroundingBlock(position,(BlockDirection)i);
+			if (IsNearByEmpty (position, (BlockDirection)i)) {
+				return SurroundingBlock (position, (BlockDirection)i);
 			}
 		}
 
@@ -312,9 +315,9 @@ public class ISSCBGrid : Object
 		
 		List<ISSCBlockVector> l = new List<ISSCBlockVector> ();
 				
-		for (int z =0; z < zSize; z++) {
-			for (int y = 0; y <ySize; y++) {
-				for (int x = 0; x <xSize; x++) {
+		for (int z = 0; z < zSize; z++) {
+			for (int y = 0; y < ySize; y++) {
+				for (int x = 0; x < xSize; x++) {
 					loopTmpBV = new ISSCBlockVector (tmpBV.x + x, tmpBV.y + y, tmpBV.z + z);
 					if (IsBlockAvailable (loopTmpBV)) {
 						l.Add (loopTmpBV);
@@ -355,6 +358,67 @@ public class ISSCBGrid : Object
 		}
 		return l.ToArray ();
 	}
+
+	public void MoveBlock (ISSCBlockVector position, ISSCBlockVector destination, bool forceMove)
+	{
+		if (!IsBlockAvailable (destination) || !IsBlockAvailable (position)) {
+			position = EnsureSafeAccess2Data (destination);
+			destination = EnsureSafeAccess2Data (destination);
+		}
+		int encodePosition = EncodeIndex (position);
+		int encodeDestination = EncodeIndex (destination);
+		if (forceMove) {
+			SetBlock (destination, blocks [encodePosition]);
+			SetBlock (position, 0);
+		} else {
+			if (!IsBlockEmpty(destination)) {
+				return;
+			} else {
+				SetBlock (destination, blocks [encodePosition]);
+				SetBlock (position, 0);
+			}
+		}
+	}
+
+	public void MoveBlocks (ISSCBlockVector[] positions, ISSCBlockVector[] destinations, bool forceMove)
+	{
+		if (positions.Length == destinations.Length) {//Check Length Match
+			int[] IDs = new int[positions.Length + 1];
+			if (forceMove) {
+				for (int i = 0; i < positions.Length; i++) {
+					IDs [i] = blocks [EncodeIndex (positions [i])];
+					SetBlock (positions [i], 0);
+				}
+				for (int i = 0; i < destinations.Length; i++) {
+					if (!IsBlockAvailable (destinations [i])) {
+						destinations [i] = EnsureSafeAccess2Data (destinations [i]);
+					}
+					SetBlock (destinations [i], IDs [i]);
+				}
+			} else {//Load Selected List
+				for (int i = 0; i < positions.Length; i++) {
+					IDs [i] = blocks [EncodeIndex (positions [i])];
+					SetBlock (positions [i], 0);
+				}
+				for (int i = 0; i < destinations.Length; i++) {
+					if (!IsBlockAvailable (destinations [i])) {//Check Destination List
+						destinations [i] = EnsureSafeAccess2Data (destinations [i]);
+					}
+					if (!IsBlockEmpty(destinations[i])) {//Resume Selected List
+						for (int j = 0; j < positions.Length; j++) {
+							SetBlock (positions [j], IDs [j]);
+						}
+						return;
+					}
+				}
+				for (int i = 0; i < destinations.Length; i++) {//Set Destination List
+					SetBlock (destinations [i], IDs [i]);
+				}
+			}
+		} else {
+			Debug.Log ("Current positions' counts not match with destinations'!");
+		}
+	}
 }
 
 [System.Serializable]
@@ -366,6 +430,11 @@ public struct ISSCBGridDescriber
 
 public enum BlockDirection
 {
-	Up, Down, Right, Left, Forward, Back
+	Up,
+	Down,
+	Right,
+	Left,
+	Forward,
+	Back
 }
 

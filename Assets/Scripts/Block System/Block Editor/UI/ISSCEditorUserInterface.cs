@@ -31,7 +31,6 @@ public class ISSCEditorUserInterface : MonoBehaviour
 		stateTips.sprite = GetStateSprite ();
 		if(core.state == ISSCBEditorState.Selecting){
 			selectTipBlock.SetActive(true);
-			selectTipBlock.transform.position = core.selectTipPosition;
 			selectTipBlock.transform.rotation = Quaternion.identity;
 		}else{
 			selectTipBlock.SetActive(false);

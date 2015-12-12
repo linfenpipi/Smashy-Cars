@@ -21,6 +21,8 @@ public class SelectTipBlockEffect : MonoBehaviour
 
 	public Camera viewingCamera;
 
+	public ISSCBEditorCore core;
+
 
 
 
@@ -47,26 +49,5 @@ public class SelectTipBlockEffect : MonoBehaviour
 
 	}
 
-	void OnMouseDrag ()
-	{
-		Ray r1 = viewingCamera.ScreenPointToRay(Input.mousePosition);
-		RaycastHit rh1;
-		Physics.Raycast (r1, out rh1, tipsBlockLayerMask);
-		Ray r2 = viewingCamera.ScreenPointToRay(Input.mousePosition);
-		RaycastHit rh2;
-		Physics.Raycast (r2, out rh2, maskedLayer);
-		switch (sb) {
-		case SelectBehaviour.Change:
-			break;
-		case SelectBehaviour.Move:
-			break;
-		case SelectBehaviour.Sphere:
-			break;
-		case SelectBehaviour.Cube:
-			break;
-		default :
-			Debug.Log ("Null Select-Behaviour exist!");
-			break;
-		}
-	}
+
 }

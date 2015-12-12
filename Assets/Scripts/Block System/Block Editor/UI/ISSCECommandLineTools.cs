@@ -50,6 +50,43 @@ public class ISSCECommandLineTools : MonoBehaviour
 				core.state = ISSCBEditorState.Selecting;
 				break;
 			}
+		} else if (command.StartsWith ("move")) {
+			string[] argus = ParseArguments (command);
+			ISSCBlockVector a = ParseBlockVector (argus [0]);
+			ISSCBlockVector b = ParseBlockVector (argus [1]);
+			bool forceMove;
+			switch (argus [2]) {
+			case "true": 
+				forceMove = true;
+				break;
+			case "false": 
+				forceMove = false;
+				break;
+			default :
+				forceMove = true;
+				break;
+			}
+
+			core.data.MoveBlock(a,b,forceMove);
+		}else if (command.StartsWith ("currentmoveto")) {
+			string[] argus = ParseArguments (command);
+			ISSCBlockVector a = ParseBlockVector (argus [0]);
+			bool forceMove;
+			switch (argus [1]) {
+			case "true": 
+				forceMove = true;
+				break;
+			case "false": 
+				forceMove = false;
+				break;
+			default :
+				forceMove = true;
+				break;
+			}
+			ISSCBlockVector currentBlock = ISSCBGrid.WorldPositionToGridPosition(core.tipsBlock.transform.position,core.moniter.transform.position);
+			core.data.MoveBlock(currentBlock,a,forceMove);
+			core.tipsBlock.transform.position = ISSCBGrid.GridPositionToWorldPosition(a,core.moniter.transform.position);
+			Debug.Log( ISSCBGrid.GridPositionToWorldPosition(a,core.moniter.transform.position));
 		}
 	}
 		

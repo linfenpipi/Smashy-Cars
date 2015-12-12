@@ -18,8 +18,9 @@ public class ISSCBEditorCore : MonoBehaviour
 	public ISSCEditorUserInterface view;
 	public int rootBlock;
 	public int currentFillingBlock;
+	public GameObject tipsBlock;
 
-	public Vector3 selectTipPosition;
+//	public Vector3 selectTipPosition;
 
 
 	ISSCEMouseCaster caster;
@@ -78,7 +79,7 @@ public class ISSCBEditorCore : MonoBehaviour
 
 		case ISSCBEditorState.Selecting:
 
-			selectTipPosition = ts.position;
+			tipsBlock.transform.position = ts.position;
 
 			return;
 		}
