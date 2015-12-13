@@ -65,6 +65,22 @@ public class ISSCEditorUserInterface : MonoBehaviour
 		core.state = ISSCBEditorState.Selecting;
 	}
 
+	public void ChangeSelectingStateToSelect(){
+		core.selectState = ISSCBEditorSelectingState.Select;
+	}
+
+	public void ChangeSelectingStateToMove(){
+		core.selectState = ISSCBEditorSelectingState.Move;
+	}
+
+	public void ChangeSelectingStateToCube(){
+		core.selectState = ISSCBEditorSelectingState.Cube;
+	}
+
+	public void ChangeSelectingStateToSphere(){
+		core.selectState = ISSCBEditorSelectingState.Sphere;
+	}
+
 	public void Return (string v)
 	{
 		if (v != "") {

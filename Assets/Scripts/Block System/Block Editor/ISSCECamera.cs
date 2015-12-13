@@ -14,6 +14,8 @@ public class ISSCECamera : MonoBehaviour {
 	private float currentScale;
 	private Vector3 currentRotation;
 	private Vector3 lastMousePosition;
+
+
 	
 	void Start () {
 		//Initialization of "current" values, we use settings in scene at the start.
@@ -22,6 +24,8 @@ public class ISSCECamera : MonoBehaviour {
 
 		//The very first "last" mouse position should be the position while the game start.
 		lastMousePosition = Input.mousePosition;
+
+
 	}
 
 	public void SetViewPoint(Vector3 newViewPoint){
@@ -50,4 +54,6 @@ public class ISSCECamera : MonoBehaviour {
 		transform.rotation = Quaternion.Slerp (transform.rotation, wantRot, rotateDamper * Time.deltaTime);
 		cameraChild.localPosition = new Vector3 (0, 0, currentScale);
 	}
+
+
 }

@@ -67,9 +67,9 @@ public class ISSCBGrid : Object
 	/// <param name="position">Position.</param>
 	public bool IsBlockAvailable (ISSCBlockVector position)
 	{
-		bool result = ISMath.Contains (position.x, 0, gridSize.x)
-		              && ISMath.Contains (position.y, 0, gridSize.y)
-		              && ISMath.Contains (position.z, 0, gridSize.z);
+		bool result = ISMath.Contains (position.x, 0, gridSize.x-1)
+		              && ISMath.Contains (position.y, 0, gridSize.y-1)
+		              && ISMath.Contains (position.z, 0, gridSize.z-1);
 
 		return result;
 	}
