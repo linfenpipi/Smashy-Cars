@@ -6,7 +6,7 @@ public class ISSCBGrid : Object
 {
 	public static readonly float ISSC_BLOCK_UNIT_SIZE = 1;
 
-	public readonly ISSCBlockVector gridSize;
+	public readonly ISSCBlockVector gridSize = ISSCBlockVector.one;
 	public string name;
 
 	protected int[] blocks;
@@ -49,6 +49,13 @@ public class ISSCBGrid : Object
 
 	public ISSCBGrid (ISSCBGridDescriber describer)
 	{
+		if (!(describer.size.x > 0))
+			describer.size.x = 1;
+		if (!(describer.size.y > 0))
+			describer.size.y = 1;
+		if (!(describer.size.z > 0))
+			describer.size.z = 1;
+
 		gridSize = describer.size;
 		
 		blocks = new int[gridSize.Length ()];
@@ -111,7 +118,7 @@ public class ISSCBGrid : Object
 	{
 		
 		if (!IsBlockAvailable (position)) {
-			Debug.LogError ("Block IO Exception: Out of range.");
+			Debug.LogWarning ("Block IO Exception: Out of range.");
 			return -1;
 		}
 
@@ -134,7 +141,7 @@ public class ISSCBGrid : Object
 	public int GetBlock (ISSCBlockVector position)
 	{
 		if (!IsBlockAvailable (position)) {
-			Debug.LogError ("Block IO Exception: Out of range.");
+			Debug.LogWarning ("Block IO Exception: Out of range.");
 			return -1;
 		}
 	
@@ -424,8 +431,9 @@ public class ISSCBGrid : Object
 [System.Serializable]
 public struct ISSCBGridDescriber
 {
-	public ISSCBlockVector size;
+	public ISSCBlockVector size ;
 	public int centerBlock;
+
 }
 
 public enum BlockDirection

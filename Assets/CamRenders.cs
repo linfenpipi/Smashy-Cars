@@ -27,6 +27,7 @@ public class CamRenders : MonoBehaviour
 			GL.Vertex (selectEndPoint);
 			GL.End ();
 			GL.PopMatrix ();
+//			GUI.TextArea(new Rect(selectEndPoint.x,selectEndPoint.y+0.1f,100,100),"test");
 		}
 	}
 }

@@ -8,9 +8,9 @@ public class ISSCEMouseCaster
 
 	LayerMask maskedLayer = System.Int32.MaxValue;
 
-	Vector3 inputPosition;
+	public Vector3 inputPosition;
 	bool lastestHitSucceed = false;
-	RaycastHit lastestHit;
+	public RaycastHit lastestHit;
 	Vector3 lastestHittingPosition = Vector3.zero;
 	Transform lastestHitingTransfrom;
 
@@ -38,7 +38,12 @@ public class ISSCEMouseCaster
 		return lastestHitSucceed;
 	}
 
-	void UpdateValues(){
+	public RaycastHit LastestHit(){
+		UpdateValues();
+		return lastestHit;
+	}
+
+	public void UpdateValues(){
 		inputPosition = Input.mousePosition;
 
 		RaycastHit hit;

@@ -113,6 +113,16 @@ public struct ISSCBlockVector
 		int distancez = a.z - b.z;
 		return (int)Mathf.Sqrt (Mathf.Pow (distancex, 2f) + Mathf.Pow (distancey, 2f) + Mathf.Pow (distancez, 2f));
 	}
+
+	public static bool operator == (ISSCBlockVector bv1, ISSCBlockVector bv2)
+	{
+		return (bv1.x==bv2.x&&bv1.y==bv2.y&&bv1.z==bv2.z);
+	}
+
+	public static bool operator != (ISSCBlockVector bv1, ISSCBlockVector bv2)
+	{
+		return !(bv1.x==bv2.x&&bv1.y==bv2.y&&bv1.z==bv2.z);
+	}
 	
 	//-Lag 12060414
 	public static ISSCBlockVector operator + (ISSCBlockVector bv1, ISSCBlockVector bv2)
