@@ -1,13 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum ISSCBEditorSelectingState{
-	Select,
-	Move,
-	Cube,
-	Sphere
-}
-
 public class ISSCBEditorCore : MonoBehaviour{
 
 	//public ISSCBEditorSelectingState selectState;

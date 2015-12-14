@@ -8,8 +8,7 @@ enum EditingState{
 	Selecting
 }
 
-public enum ISSCBEditorSelectingState{
-	Select,
+enum SelectionOperations{
 	Move,
 	Cube,
 	Sphere
