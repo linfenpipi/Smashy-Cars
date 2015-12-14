@@ -1,71 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum ISSCBEditorState
-{
-	Placing,
-	Deleting,
-	Selecting
-}
-
-public enum ISSCBEditorSelectingState
-{
+public enum ISSCBEditorSelectingState{
 	Select,
 	Move,
 	Cube,
 	Sphere
 }
 
-public class ISSCBEditorCore : MonoBehaviour
-{
+public class ISSCBEditorCore : MonoBehaviour{
 
-	public ISSCBEditorState state;
-	public ISSCBEditorSelectingState selectState;
+	//public ISSCBEditorSelectingState selectState;
 	public ISSCECamera editorCamera;
 	public ISSCBGrid data;
 	public ISSCBGridController moniter;
-	public ISSCEditorUserInterface view;
+	public ISSCBEditorDesktopUserInterface view;
 	public int rootBlock;
 	public int currentFillingBlock;
 	public GameObject tipsBlock;
-
-	//	public Vector3 selectTipPosition;
-
-
-	ISSCEMouseCaster caster;
 	public CamRenders cameraScript;
+
+	int[] selections;
+
+
 	float depth;
 	Camera mCamera;
 	ISSCBlockVector tmpVector1;
 	GameObject tmpGO;
 
-
-	void Start ()
-	{
-		caster = GetComponent<ISSCEMouseCaster> ();
-		caster.core = this;
+	void Start (){
 		mCamera = editorCamera.GetComponentInChildren<Camera> ();
 	}
 
-	public void SaveCurrentScene (string path)
-	{
+	public void SaveCurrentScene (string path){
 		ISSCDGridFileUtilities.CreateFile (data, path);
 	}
 
-	public void OpenScene (string path)
-	{
+	public void OpenScene (string path){
 		OpenScene (ISSCDGridFileUtilities.LoadFromFile (path));
 	}
 
-	public void OpenScene (ISSCBGrid newDataSet)
-	{
+	public void OpenScene (ISSCBGrid newDataSet){
 		data = newDataSet;
 		editorCamera.SetViewPoint (ISSCBGrid.GridPositionToWorldPosition (data.GetCenterBlock (), moniter.transform.position));
 		moniter.SwitchDataSet (data);
 	}
 
-	public void NewScene (ISSCBlockVector size, string name)
-	{
+	public void NewScene (ISSCBlockVector size, string name){
 		data = new ISSCBGrid (size);
 		data.name = name;
 		data.SetBlock (data.GetCenterBlock (), rootBlock);
@@ -74,37 +55,59 @@ public class ISSCBEditorCore : MonoBehaviour
 		moniter.SwitchDataSet (data);
 	}
 
-	public void UpdateBlockForWorldPosition (Vector3 hitPoint, Vector3 hittedBlockPosition, Transform ts)
-	{
-		ISSCBlockVector bv = ISSCBlockVector.zero;
-		int fb = currentFillingBlock;
-
-		switch (state) {
-		case ISSCBEditorState.Placing:
-			bv = CalPlacingPosition (hitPoint, hittedBlockPosition, ts);
-			break;
-
-		case ISSCBEditorState.Deleting:
-
-			bv = ISSCBGrid.WorldPositionToGridPosition (hittedBlockPosition, moniter.transform.position);
-			Debug.Log (bv);
-			fb = 0;
-			break;
-
-		case ISSCBEditorState.Selecting:
-
-			tipsBlock.transform.position = ts.position;
-
-			return;
-		}
-
-		data.SetBlock (bv, fb);
+	public void SelectBlock(Vector3 position){
+		SelectBlock (ISSCBGrid.WorldPositionToGridPosition (position, moniter.transform.position));
 	}
 
-	public void MouseCasterAction_MouseDown (RaycastHit hit1, RaycastHit hit2, Vector3 inputPosition)
+	public void SelectBlock(ISSCBlockVector block){
+		SelectBlock(data.EncodeIndex (block));
+	}
+
+	public void SelectBlock(int blockID){
+		int[] array = new int[1];
+		array [0] = blockID;
+		selections = array;
+	}
+
+	public void SelectBlocks(int[] newSelections){
+		selections = newSelections;
+	}
+
+	public ISSCBlockVector CurrentSelection(){
+		return data.DecodeIndex (selections [0]);
+	}
+
+	public void PlaceBlockWithCurrentSetting(Vector3 hitPoint, Vector3 hittedBlockPosition){
+		PlaceBlockWithCurrentSetting (CalPlacingPosition (hitPoint, hittedBlockPosition));
+	}
+
+	public void PlaceBlockWithCurrentSetting(ISSCBlockVector block){
+		data.SetBlock (block, currentFillingBlock);
+	}
+
+	public void DeleteBlock(Vector3 hittedBlockPosition){
+		DeleteBlock (BlockForWorldPosition(hittedBlockPosition));
+	}
+
+	public void DeleteBlock(ISSCBlockVector block){
+		data.SetBlock (block, 0);
+	}
+
+	public ISSCBlockVector BlockForWorldPosition(Vector3 position){
+		return ISSCBGrid.WorldPositionToGridPosition (position, moniter.transform.position);
+	}
+
+	public ISSCBlockVector CalPlacingPosition (Vector3 hitPoint, Vector3 hittedBlockPosition)
 	{
+		Vector3 dir = hitPoint - hittedBlockPosition;
+		dir = ISMath.Clip2NormalDirectionV2 (dir);
+		return ISSCBGrid.WorldPositionToGridPosition (dir + hittedBlockPosition, moniter.transform.position);
+	}
+
+	/*
+	public void MouseCasterAction_MouseDown (RaycastHit hit1, RaycastHit hit2, Vector3 inputPosition){
 		if (hit1.collider) {
-			UpdateBlockForWorldPosition (hit1.point, hit1.transform.position, hit1.transform);
+			UpdateBlockForWorldPosition (hit1.point, hit1.transform.position);
 			if (state == ISSCBEditorState.Selecting && selectState == ISSCBEditorSelectingState.Move) {
 				tmpVector1 = ISSCBGrid.WorldPositionToGridPosition (hit1.transform.position, moniter.transform.position);
 				hit1.collider.gameObject.SetActive (false);
@@ -125,8 +128,7 @@ public class ISSCBEditorCore : MonoBehaviour
 		}
 	}
 
-	public void MouseCasterAction_MouseDrag (RaycastHit hit,Vector3 inputPosition)
-	{
+	public void MouseCasterAction_MouseDrag (RaycastHit hit,Vector3 inputPosition){
 		if (state == ISSCBEditorState.Selecting) {
 				switch (selectState) {
 
@@ -135,7 +137,7 @@ public class ISSCBEditorCore : MonoBehaviour
 				case ISSCBEditorSelectingState.Move:
 					Vector3 position;
 					if (hit.collider) {
-						position = ISSCBGrid.GridPositionToWorldPosition (CalPlacingPosition (hit.point, hit.collider.transform.position, hit.collider.transform), moniter.transform.position);
+						position = ISSCBGrid.GridPositionToWorldPosition (CalPlacingPosition (hit.point, hit.collider.transform.position), moniter.transform.position);
 						tipsBlock.transform.position = position;
 						tmpGO.transform.Rotate (tmpGO.transform.up, 45 * Time.deltaTime);
 						tmpGO.transform.position = tipsBlock.transform.position;
@@ -153,10 +155,7 @@ public class ISSCBEditorCore : MonoBehaviour
 			}
 	}
 
-	public void MouseCasterAction_MouseUp (RaycastHit hit, Vector3 inputPosition)
-	{
-
-
+	public void MouseCasterAction_MouseUp (RaycastHit hit, Vector3 inputPosition){
 			if (state == ISSCBEditorState.Selecting) {
 				switch (selectState) {
 
@@ -166,7 +165,7 @@ public class ISSCBEditorCore : MonoBehaviour
 					Destroy (tmpGO);
 
 					if (hit.collider) {
-						ISSCBlockVector bv = CalPlacingPosition (hit.point, hit.collider.transform.position, hit.collider.transform);
+						ISSCBlockVector bv = CalPlacingPosition (hit.point, hit.collider.transform.position);
 						data.SetBlock (bv, data.GetRawData () [data.EncodeIndex (tmpVector1)]);
 						data.SetBlock (tmpVector1, 0);
 					}
@@ -174,7 +173,7 @@ public class ISSCBEditorCore : MonoBehaviour
 				case ISSCBEditorSelectingState.Cube:
 					if (cameraScript.selecting) {
 						Vector3 v1 = tipsBlock.transform.position;
-						float length = (Vector3.Distance (cameraScript.selectStartPoint, cameraScript.selectEndPoint)) * (Mathf.Tan (mCamera.fieldOfView) * (depth + 10) * 2);
+						float length = (Vector3.Distance (cameraScript.selectStartPoint, cameraScript.selectEndPoint)) * (Mathf.Tan (mCamera.fieldOfView/2f) * (depth + 5) * 2);
 						ISSCBlockVector fromPosition = ISSCBGrid.WorldPositionToGridPosition (v1 + Vector3.one * length, moniter.transform.position);
 						ISSCBlockVector toPosition = ISSCBGrid.WorldPositionToGridPosition (v1 - Vector3.one * length, moniter.transform.position);
 						ISSCGridPrimitiveShapeUtilities.CreateCube (data, currentFillingBlock, fromPosition, toPosition);
@@ -184,7 +183,7 @@ public class ISSCBEditorCore : MonoBehaviour
 				case ISSCBEditorSelectingState.Sphere:
 					if (cameraScript.selecting) {
 						Vector3 v1 = tipsBlock.transform.position;
-						float radius = (Vector3.Distance (cameraScript.selectStartPoint, cameraScript.selectEndPoint)) * (Mathf.Tan (mCamera.fieldOfView) * (depth + 10) * 2);
+						float radius = (Vector3.Distance (cameraScript.selectStartPoint, cameraScript.selectEndPoint)) * (Mathf.Tan (mCamera.fieldOfView/2f) * (depth + 5) * 2);
 						ISSCGridPrimitiveShapeUtilities.CreateSphere (data, ISSCBGrid.WorldPositionToGridPosition (v1, moniter.transform.position), currentFillingBlock, radius);
 						cameraScript.selecting = false;
 					}
@@ -194,19 +193,5 @@ public class ISSCBEditorCore : MonoBehaviour
 
 			}
 	}
-
-	public ISSCBlockVector CalPlacingPosition (Vector3 hitPoint, Vector3 hittedBlockPosition, Transform ts)
-	{
-		Vector3 dir = hitPoint - hittedBlockPosition;
-		dir = ISMath.Clip2NormalDirectionV2 (dir, ts);
-		return ISSCBGrid.WorldPositionToGridPosition (dir + ts.position, moniter.transform.position);
-	}
-
-	public void DeleteBlockForWorldPosition (Vector3 hittedBlockPosition)
-	{
-		ISSCBlockVector bv = ISSCBGrid.WorldPositionToGridPosition (hittedBlockPosition, moniter.transform.position);
-		
-		data.SetBlock (bv, currentFillingBlock);
-	}
-
+	*/
 }

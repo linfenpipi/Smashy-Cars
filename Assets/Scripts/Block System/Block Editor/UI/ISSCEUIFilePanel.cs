@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ISSCEUIFilePanel : MonoBehaviour {
 
-	public ISSCEditorUserInterface uiCore;
+	public ISSCBEditorDesktopUserInterface uiCore;
 	public string defaultPath;
 	public InputField textField;
 	public Text title;

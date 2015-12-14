@@ -2,9 +2,22 @@
 using UnityEngine.UI;
 using System.Collections;
 
+enum EditingState{
+	Placing,
+	Deleting,
+	Selecting
+}
 
-public class ISSCEditorUserInterface : MonoBehaviour
+public enum ISSCBEditorSelectingState{
+	Select,
+	Move,
+	Cube,
+	Sphere
+}
+
+public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 {
+	public Camera viewingCamera;
 	public GameObject mainScreenObject;
 	public ISSCEUIFilePanel filePanel;
 	public Text title;
@@ -20,31 +33,59 @@ public class ISSCEditorUserInterface : MonoBehaviour
 
 	public GameObject selectTipBlock;
 
+	EditingState userEditingState = EditingState.Placing;
+
+	ISSCEMouseCaster mouseCaster;
+
 	void Start ()
 	{
 		blockList = ISSCDBlocksList.LoadList ();
+		mouseCaster = new ISSCEMouseCaster ();
+		mouseCaster.viewingCamera = viewingCamera;
+		mouseCaster.SetLayerMask (1 << ISSCLayerManager.blockLayer);
 	}
 
-	void Update ()
+	void Update(){
+
+		bool mouseLeftButtonPress = Input.GetMouseButtonDown (0);
+		bool mouseLeftButtonPressed = Input.GetMouseButton (0);
+		bool mouseLeftButtonReleased = Input.GetMouseButtonUp (0);
+
+		switch (userEditingState) {
+		case EditingState.Placing:
+			if (mouseLeftButtonPress && mouseCaster.CheckIfHitted()) core.PlaceBlockWithCurrentSetting (mouseCaster.CurrentHittingWorldPosition (), mouseCaster.CurrentHittingTransfrom ().position);
+			break;
+
+		case EditingState.Deleting:
+			if (mouseLeftButtonPress && mouseCaster.CheckIfHitted()) core.DeleteBlock (mouseCaster.CurrentHittingTransfrom ().position);
+			break;
+
+		case EditingState.Selecting:
+			if (mouseLeftButtonPress && mouseCaster.CheckIfHitted()) core.SelectBlock (mouseCaster.CurrentHittingTransfrom ().position);
+			break;
+		}
+
+		UpdateUI ();
+	}
+
+	void UpdateUI ()
 	{
 		tipsImage.color = blockList.blocks [core.currentFillingBlock].GetComponent<MeshRenderer> ().sharedMaterial.color;
 		stateTips.sprite = GetStateSprite ();
-		if(core.state == ISSCBEditorState.Selecting){
-			selectTipBlock.SetActive(true);
-			selectTipBlock.transform.rotation = Quaternion.identity;
-		}else{
-			selectTipBlock.SetActive(false);
-		}
+
+		selectTipBlock.SetActive(true);
+		selectTipBlock.transform.rotation = Quaternion.identity;
+		selectTipBlock.SetActive(false);
 	}
 
 	Sprite GetStateSprite ()
 	{
-		switch (core.state) {
-		case ISSCBEditorState.Placing: 
+		switch (userEditingState) {
+		case EditingState.Placing: 
 			return stateSprite [0];
-		case ISSCBEditorState.Deleting: 
+		case EditingState.Deleting: 
 			return stateSprite [1];
-		case ISSCBEditorState.Selecting: 
+		case EditingState.Selecting: 
 			return stateSprite [2];
 		default :
 			return stateSprite [0];
@@ -53,53 +94,49 @@ public class ISSCEditorUserInterface : MonoBehaviour
 
 	public void ChangeToPlacingState ()
 	{
-		core.state = ISSCBEditorState.Placing;
+		userEditingState = EditingState.Placing;
 	}
 
 	public void ChangeToDeletingState ()
 	{
-		core.state = ISSCBEditorState.Deleting;
+		userEditingState = EditingState.Deleting;
 	}
 
 	public void ChangeToSelectingState(){
-		core.state = ISSCBEditorState.Selecting;
+		userEditingState = EditingState.Selecting;
 	}
 
 	public void ChangeSelectingStateToSelect(){
-		core.selectState = ISSCBEditorSelectingState.Select;
+		//userEditingState = ISSCBEditorSelectingState.Select;
 	}
 
 	public void ChangeSelectingStateToMove(){
-		core.selectState = ISSCBEditorSelectingState.Move;
+		//userEditingState = ISSCBEditorSelectingState.Move;
 	}
 
 	public void ChangeSelectingStateToCube(){
-		core.selectState = ISSCBEditorSelectingState.Cube;
+		//userEditingState = ISSCBEditorSelectingState.Cube;
 	}
 
 	public void ChangeSelectingStateToSphere(){
-		core.selectState = ISSCBEditorSelectingState.Sphere;
+		//userEditingState = ISSCBEditorSelectingState.Sphere;
 	}
 
 	public void Return (string v)
 	{
+		string command = blockSelector.text;
+
 		if (v != "") {
-
 			clt.Submit (v);
-
 		} else {
-
-			string command = blockSelector.text;
-
 			clt.Submit (blockSelector.text);
-
-			Debug.Log ("Command Accepted... " + command);
 			blockSelector.text = "";
 		}
 	}
 
 	public void NewScene ()
 	{
+		Debug.Log ("new s");
 		core.NewScene (new ISSCBlockVector (21, 21, 21), "NewScene");
 		title.text = "BE 0.2.3 :" + core.data.name;
 	}

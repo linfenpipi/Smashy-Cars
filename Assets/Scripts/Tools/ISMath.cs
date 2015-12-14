@@ -24,51 +24,52 @@ public class ISMath {
 		return v * f;
 	}
 
-//	static public Vector3 Clip2NormalDirection(Vector3 d){
-//		float[] values = new float[3];
-//		values [0] = d.x;
-//		values [1] = d.y;
-//		values [2] = d.z;
-//
-//		float max = Mathf.NegativeInfinity;
-//		float maxRaw = 0;
-//		int maxID = -1;
-//		for (int i = 0; i < values.Length; i++) {
-//			if(Mathf.Abs(values[i]) > max){
-//				max = Mathf.Abs(values[i]);
-//				maxRaw = values[i];
-//				maxID = i;
-//			}
-//			values[i] = 0;
-//		}
-//
-//		values [maxID] = maxRaw;
-//
-//		d.x = values [0];
-//		d.y = values [1];
-//		d.z = values [2];
-//
-//		return d;
-//	}
+	static public Vector3 Clip2NormalDirection(Vector3 d){
+		float[] values = new float[3];
+		values [0] = d.x;
+		values [1] = d.y;
+		values [2] = d.z;
+
+		float max = Mathf.NegativeInfinity;
+		float maxRaw = 0;
+		int maxID = -1;
+		for (int i = 0; i < values.Length; i++) {
+			if(Mathf.Abs(values[i]) > max){
+				max = Mathf.Abs(values[i]);
+				maxRaw = values[i];
+				maxID = i;
+			}
+			values[i] = 0;
+		}
+
+		values [maxID] = maxRaw;
+
+		d.x = values [0];
+		d.y = values [1];
+		d.z = values [2];
+
+		return d;
+	}
 	//-L
-	static public Vector3 Clip2NormalDirectionV2(Vector3 d , Transform ts){
-		Vector3[] v3s = {ts.up,-ts.up,ts.right,-ts.right,ts.forward,-ts.forward};
-		return FindNearestByDot (v3s,d);
+	static Vector3[] anArrayOf6Vectors = {Vector3.up,-Vector3.up,Vector3.right,-Vector3.right,Vector3.forward,-Vector3.forward};
+	static public Vector3 Clip2NormalDirectionV2(Vector3 d){
+		return FindNearestByDot (anArrayOf6Vectors,d);
 	}
 	//-L
 	static public Vector3 FindNearestByDot(Vector3[] v3s,Vector3 v3){
 
-		float maxDot = Vector3.Dot(v3s[0],v3);
+		float maxDot = Mathf.NegativeInfinity;
 		float calcDot;
+		Vector3 v = Vector3.zero;
 		
 		for(int i =0 ; i<v3s.Length ; i++){
 			calcDot = Vector3.Dot(v3s[i],v3);
 			if(calcDot>maxDot){
 				maxDot = calcDot;
-				v3s[0] = v3s[i];
+				v = v3s[i];
 			}	
 		}
-		return v3s[0];
+		return v;
 	}
 
 	static public float Clamp(float v, ISRange range){

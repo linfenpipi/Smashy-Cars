@@ -37,19 +37,6 @@ public class ISSCECommandLineTools : MonoBehaviour
 			int fillingBlock = int.Parse (argus [2]);
 
 			ISSCGridPrimitiveShapeUtilities.CreateCube (core.data, fillingBlock, a, b);
-		} else if (command.StartsWith ("switch")) {
-			string[] argus = ParseArguments (command);
-			switch (argus [0]) {
-			case "placing":
-				core.state = ISSCBEditorState.Placing;
-				break;
-			case "deleting":
-				core.state = ISSCBEditorState.Deleting;
-				break;
-			case "selecting":
-				core.state = ISSCBEditorState.Selecting;
-				break;
-			}
 		} else if (command.StartsWith ("move")) {
 			string[] argus = ParseArguments (command);
 			ISSCBlockVector a = ParseBlockVector (argus [0]);
