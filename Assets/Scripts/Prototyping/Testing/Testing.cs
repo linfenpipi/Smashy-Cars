@@ -6,6 +6,9 @@ public class Testing : MonoBehaviour {
 	public int testNumber;
 
 	void Start () {
+
+		ISDelayTimer.DoAfter (2f, () => Debug.Log ("Hi"));
+
 //		ISSCBGrid grid = new ISSCBGrid (new ISSCBlockVector(10,10,10));
 
 
