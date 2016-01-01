@@ -5,7 +5,7 @@ public class ISSCBlock : MonoBehaviour
 {
 
 	public ISSCBlockVector size = new ISSCBlockVector (1, 1, 1);
-
+	/*
 	void OnCollisionEnter (Collision collision)
 	{
 		if (collision.collider.CompareTag ("ExpColliders")) {
@@ -27,5 +27,5 @@ public class ISSCBlock : MonoBehaviour
 			}
 		}
 	}
-
+````*/
 }
