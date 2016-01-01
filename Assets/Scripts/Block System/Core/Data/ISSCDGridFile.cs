@@ -69,7 +69,7 @@ public class ISSCDGridFileUtilities
 		File.WriteAllText(DataPath+"/"+FileName+"."+suffixName,text);
 	}
 	
-	static JsonData LoadFileAsJson(string DataPath,string FileName){
+	public static JsonData LoadFileAsJson(string DataPath,string FileName){
 	
 		JsonData json = JsonMapper.ToObject(File.ReadAllText(DataPath+"/"+FileName));
 		return json;

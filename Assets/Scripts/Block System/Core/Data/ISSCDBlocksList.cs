@@ -9,4 +9,5 @@ public class ISSCDBlocksList : MonoBehaviour {
 		GameObject obj = Resources.Load("BlocksList", typeof(GameObject)) as GameObject;
 		return obj.GetComponent<ISSCDBlocksList> ();
 	}
+
 }
