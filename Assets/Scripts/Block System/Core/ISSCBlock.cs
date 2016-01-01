@@ -5,11 +5,15 @@ public class ISSCBlock : MonoBehaviour
 {
 
 	public ISSCBlockVector size = new ISSCBlockVector (1, 1, 1);
+<<<<<<< HEAD
 
 	public bool droped = false;
 	bool destroyed = false;
 	bool b = true;
 
+=======
+	/*
+>>>>>>> origin/master
 	void OnCollisionEnter (Collision collision)
 	{
 		if (collision.collider.CompareTag ("ExpColliders") && collision != null && !droped) {
@@ -33,6 +37,7 @@ public class ISSCBlock : MonoBehaviour
 			}
 		}
 	}
+<<<<<<< HEAD
 
 	void Update(){
 	if(droped&&!destroyed){
@@ -55,4 +60,7 @@ public class ISSCBlock : MonoBehaviour
 	yield return null;
 	}
 
+=======
+````*/
+>>>>>>> origin/master
 }
