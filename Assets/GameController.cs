@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
 	ISSCDBlocksList cubeList;
 	GameObject[] allKindOfCubes;
 	Vector3 originPos;
-	bool gaming = false;
+	public bool gaming = false;
 
 	void Start ()
 	{

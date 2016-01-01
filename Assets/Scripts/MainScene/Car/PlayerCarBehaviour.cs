@@ -5,7 +5,10 @@ public class PlayerCarBehaviour : MonoBehaviour {
 
 	Rigidbody rb;
 	public float speed;
+	public float horizonSpeed;
+	float horizonAxis;
 	Vector3 clamp;
+	public GameController gc;
 
 	// Use this for initialization
 	void Start () {
@@ -15,6 +18,17 @@ public class PlayerCarBehaviour : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		rb.MovePosition(transform.position-transform.right*speed*Time.deltaTime);
+		if(gc.gaming){
+			playerControl();
+		}
+	}
+
+	void playerControl(){
+//		if(Input.GetButton("Horizontal")){
+			horizonAxis = Input.GetAxis("Horizontal");
+//		}
+//		Debug.Log(transform.right*horizonAxis*horizonSpeed);
+			rb.AddForce(transform.forward*horizonAxis*horizonSpeed,ForceMode.Force);
 	}
 
 	void FixedUpdate(){
