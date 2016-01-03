@@ -12,10 +12,13 @@ public class ISSCBGrid : Object
 	protected int[] blocks;
 
 	int version = 0;
-	//Stores the version code
+	//Stores the version cod
 
 	public static Vector3 GridPositionToWorldPosition (ISSCBlockVector position, Vector3 gridOriginInWorld)
 	{
+		
+		
+
 		return new Vector3 (gridOriginInWorld.x + position.x * ISSC_BLOCK_UNIT_SIZE,
 			gridOriginInWorld.y + position.y * ISSC_BLOCK_UNIT_SIZE,
 			gridOriginInWorld.z + position.z * ISSC_BLOCK_UNIT_SIZE);
