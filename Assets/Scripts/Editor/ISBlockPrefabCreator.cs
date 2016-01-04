@@ -9,13 +9,15 @@ public class ISBlockPrefabCreator : Editor {
 	static void LoadFromSCB(){
 		//First, we ask user to select a .scb file to load.w
 
-		EditorUtility.DisplayProgressBar ("Load from SCB", "Loading files...", 0);
+		EditorUtility.DisplayProgressBar ("Load from SCB", "Waiting for user action...", 0);
 
 		string path = EditorUtility.OpenFilePanel ("Choose SCB", Application.dataPath, "scb");
 		if (string.IsNullOrEmpty (path)) {
 			EditorUtility.ClearProgressBar ();
 			return;
 		}
+
+		EditorUtility.DisplayProgressBar ("Load from SCB", "Reading file...", 0);
 
 		//Once we have the file path, we parse its name, and use FileUtilities to load it.
 		string fileName = path.Substring (path.LastIndexOf ("/"));
@@ -44,6 +46,7 @@ public class ISBlockPrefabCreator : Editor {
 		EditorUtility.DisplayProgressBar ("Load from SCB", "Loading files...", 1);
 
 		int[] rawData = dataSet.GetRawData ();
+		Vector3 centerPosition = ISSCBGrid.GridPositionToWorldPosition (dataSet.GetCenterBlock (),rootTrans.position);
 
 		EditorUtility.DisplayProgressBar ("Load from SCB", "Creating GameObjects...", 0);
 
@@ -52,7 +55,7 @@ public class ISBlockPrefabCreator : Editor {
 
 			ISSCBlockVector b = dataSet.DecodeIndex (i);
 
-			Vector3 position = ISSCBGrid.GridPositionToWorldPosition (b, rootTrans.position);
+			Vector3 position = ISSCBGrid.GridPositionToWorldPosition (b, rootTrans.position) - centerPosition;
 			GameObject obj = ISObjectPoolManager.Spawn (blockList.blocks [rawData [i]].gameObject, position, Quaternion.identity) as GameObject;
 			obj.transform.parent = rootObj.transform;
 			children.Add (obj);
