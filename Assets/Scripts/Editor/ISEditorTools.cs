@@ -9,6 +9,9 @@ public class ISEditorTools : MonoBehaviour{
 		GameObject rootObj = Selection.activeGameObject;
 		Transform[] childrenTrans = rootObj.GetComponentsInChildren<Transform> ();
 
+		Debug.Log (rootObj);
+		Debug.Log (childrenTrans.Length);
+
 		Rigidbody rootRigid = rootObj.GetComponent<Rigidbody> ();
 		if (!rootRigid) rootRigid = rootObj.AddComponent<Rigidbody> ();
 
