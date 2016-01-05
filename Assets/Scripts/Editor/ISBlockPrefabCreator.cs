@@ -17,6 +17,7 @@ public class ISBlockPrefabCreator : Editor {
 			return;
 		}
 
+		int shouldFill = EditorUtility.DisplayDialogComplex ("Fill ?", "Do you want to fill the model ?", "Yep", "NO !", "Nevermind !");
 		int shouldConnectWithJoint = EditorUtility.DisplayDialogComplex ("Apply Physic Connections ?", "Do you want to apply physic connections to blocks ?", "Yep", "NO !", "Nevermind !");
 
 		EditorUtility.DisplayProgressBar ("Load from SCB", "Reading file...", 0);
@@ -57,9 +58,12 @@ public class ISBlockPrefabCreator : Editor {
 
 			ISSCBlockVector b = dataSet.DecodeIndex (i);
 
+			if (shouldFill != 0 && !dataSet.IsBlockVisiable (b)) continue;
+
 			Vector3 position = ISSCBGrid.GridPositionToWorldPosition (b, rootTrans.position) - centerPosition;
 			GameObject obj = ISObjectPoolManager.Spawn (blockList.blocks [rawData [i]].gameObject, position, Quaternion.identity) as GameObject;
 			obj.GetComponent<ISSCBlock> ().blockID = i;
+			obj.name = "Block " + i.ToString ();
 			obj.transform.parent = rootObj.transform;
 			childrens.Add (obj);
 
@@ -94,6 +98,8 @@ public class ISBlockPrefabCreator : Editor {
 					}
 				}
 
+				if (!toConnect) continue;
+
 				FixedJoint joint = operatingObj.AddComponent<FixedJoint> ();
 				joint.connectedBody = toConnect.GetComponent<Rigidbody> () ? toConnect.GetComponent<Rigidbody> () : toConnect.AddComponent<Rigidbody> ();
 				
@@ -102,6 +108,8 @@ public class ISBlockPrefabCreator : Editor {
 			EditorUtility.DisplayProgressBar ("Applying Physic Connections", "Processing " + i.ToString() + " of " + childrens.Count + " objects..", (float)i/(float)childrens.Count);
 		}
 
+
+		//Start validing, in another word, this will make me programs easier :)
 		for (int i = 0; i < childrens.Count; i++) {
 
 			Rigidbody r = childrens [i].GetComponent<Rigidbody> ();
@@ -109,6 +117,15 @@ public class ISBlockPrefabCreator : Editor {
 				r.isKinematic = false;
 			} else {
 				Debug.LogError ("Failed to vaild : Unknown error");
+			}
+
+			FixedJoint[] joints = childrens [i].GetComponents<FixedJoint> ();
+			for (int j = 0; j < joints.Length; j++) {
+				if (!joints [j].connectedBody)
+					DestroyImmediate (joints [j]);
+
+				joints [j].breakForce = 1000;
+				joints [j].breakTorque = 1000;
 			}
 
 			EditorUtility.DisplayProgressBar ("Applying Physic Connections", "Vailding " + i.ToString() + " of " + childrens.Count + " objects..", (float)i/(float)childrens.Count);
