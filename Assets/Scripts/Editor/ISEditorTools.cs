@@ -7,7 +7,7 @@ public class ISEditorTools : MonoBehaviour{
 	[MenuItem("SPINACH/Tools/Connect Children via Fixed Joint to Selection Root",false,1)]
 	static void Connect2SelectionRoot(){
 		GameObject rootObj = Selection.activeGameObject;
-		Transform[] childrenTrans = rootObj.GetComponentsInChildren<Transform> ();
+		GameObject[] childrenTrans = ISEditorTools.GetChildren(rootObj);
 
 		Debug.Log (rootObj);
 		Debug.Log (childrenTrans.Length);
@@ -19,13 +19,16 @@ public class ISEditorTools : MonoBehaviour{
 			//if (childrenTrans [i].gameObject == rootObj) continue;
 
 			FixedJoint joint = childrenTrans [i].GetComponent<FixedJoint> ();
-			if (!joint) joint = childrenTrans [i].gameObject.AddComponent<FixedJoint> ();
+			joint = rootObj.gameObject.AddComponent<FixedJoint> ();
 
+			joint.connectedBody = childrenTrans [i].GetComponent<Rigidbody> ();
+			/*
 			if (i == 0) {
 				joint.connectedBody = rootRigid;
 			} else {
 				joint.connectedBody = childrenTrans[i-1].GetComponent<Rigidbody>();
 			}
+			*/
 		}
 
 		int select = EditorUtility.DisplayDialogComplex ("Successfully Connected", "Do you want to select all joints added to do additional settings ?", "Sure !", "Nope, keep my current selection", "Go away !");
@@ -37,6 +40,17 @@ public class ISEditorTools : MonoBehaviour{
 		}
 		else if (select == 2)
 			Debug.LogError ("Sad,,,");
+
+	}
+
+	static public GameObject[] GetChildren(GameObject obj){
+
+		int count = obj.transform.childCount;
+		GameObject[] list = new GameObject[count];
+
+		for (int i = 0; i < count; i++) list [i] = obj.transform.GetChild (i).gameObject;
+
+		return list;
 
 	}
 }
