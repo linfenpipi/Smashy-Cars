@@ -6,7 +6,8 @@ public class CubeBehaviours : MonoBehaviour
 
 	public GameController runtimeCore;
 	public GameObject massCore;
-	public bool droped;
+	public bool droped = false;
+	bool hpDecreased = false;
 	public float catchRadiusParam;
 	public float forceParam;
 
@@ -21,6 +22,10 @@ public class CubeBehaviours : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		if(droped && !hpDecreased){
+		hpDecreased = true;
+		massCore.GetComponent<PlayerCarBehaviour>().hp -= 1;
+		}
 		
 	}
 
@@ -29,6 +34,7 @@ public class CubeBehaviours : MonoBehaviour
 		if (other.CompareTag ("BasicCubes") || droped) {
 			return;
 		} else if (runtimeCore.gaming && other.CompareTag ("ExpColliders")) {
+
 			float relateSpeed;
 			float catchRadius;
 			float force;
@@ -37,17 +43,22 @@ public class CubeBehaviours : MonoBehaviour
 			catchRadius = relateSpeed * catchRadiusParam;
 			force = relateSpeed * forceParam;
 
+			massCore.GetComponent<Rigidbody>().AddForce(relateSpeed*100*(massCore.transform.position - transform.position).normalized,ForceMode.Impulse);
+
 			Collider[] cols = Physics.OverlapSphere (transform.position, catchRadius);
 			for (int i = 0; i < cols.Length; i++) {
 				if (cols [i].CompareTag ("BasicCubes")) {
 					cols [i].GetComponent<CubeBehaviours> ().droped = true;
-					cols [i].transform.parent = null;
+//					cols [i].transform.parent = null;
 					cols [i].isTrigger = false;
+					Rigidbody rb;
 					if (cols [i].GetComponent<Rigidbody> () == null) {
-						Rigidbody rb = cols [i].gameObject.AddComponent<Rigidbody> ();
+						rb = cols [i].gameObject.AddComponent<Rigidbody> ();
+					} else {
+						rb = cols [i].GetComponent<Rigidbody> ();
 					}
-//					rb.AddExplosionForce (force, transform.position, catchRadius);
-					cols[i].GetComponent<Rigidbody>().AddExplosionForce (force, transform.position, catchRadius);
+					rb.drag = 0.12f;
+					rb.AddExplosionForce (force, transform.position, catchRadius);
 				}
 			}
 		}
