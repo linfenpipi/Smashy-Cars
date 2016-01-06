@@ -11,7 +11,8 @@ public class PlayerCarBehaviour : MonoBehaviour
 	float horizonAxis;
 	Vector3 clamp;
 	public GameController gc;
-	public int hp = 1000;
+	public int hp = 500;
+	bool endPlayed = false;
 
 	// Use this for initialization
 	void Start ()
@@ -51,7 +52,11 @@ public class PlayerCarBehaviour : MonoBehaviour
 	}
 
 	void GameEnd ()
-	{
+	{	
+		if(endPlayed){
+		return;
+		}
+		endPlayed = true;
 		gc.gaming = false;
 		CubeBehaviours[] cbs = GetComponentsInChildren<CubeBehaviours> ();
 		for (int i = 0; i < cbs.Length; i++) {

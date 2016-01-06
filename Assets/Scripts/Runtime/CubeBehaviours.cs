@@ -24,7 +24,7 @@ public class CubeBehaviours : MonoBehaviour
 	{
 		if(droped && !hpDecreased){
 		hpDecreased = true;
-		massCore.GetComponent<PlayerCarBehaviour>().hp -= 1;
+		massCore.GetComponent<PlayerCarBehaviour>().hp --;
 		}
 		
 	}
