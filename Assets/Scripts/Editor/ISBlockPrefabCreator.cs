@@ -121,11 +121,11 @@ public class ISBlockPrefabCreator : Editor {
 
 			FixedJoint[] joints = childrens [i].GetComponents<FixedJoint> ();
 			for (int j = 0; j < joints.Length; j++) {
-				if (!joints [j].connectedBody)
-					DestroyImmediate (joints [j]);
-
 				joints [j].breakForce = 1000;
 				joints [j].breakTorque = 1000;
+
+				if (!joints [j].connectedBody)
+					DestroyImmediate (joints [j]);
 			}
 
 			EditorUtility.DisplayProgressBar ("Applying Physic Connections", "Vailding " + i.ToString() + " of " + childrens.Count + " objects..", (float)i/(float)childrens.Count);
