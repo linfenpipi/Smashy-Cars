@@ -55,6 +55,7 @@ public class PlayerCarBehaviour : MonoBehaviour
 	void GameEnd ()
 	{	
 		if(endPlayed){
+		gc.endedGame = true;
 		return;
 		}
 		endPlayed = true;

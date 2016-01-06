@@ -18,6 +18,9 @@ public class GameController : MonoBehaviour
 	Vector3 originPos;
 	public bool gaming = false;
 	public CubeBehaviours supported;
+	public bool endedGame = false;
+
+
 
 	void Start ()
 	{
@@ -35,9 +38,13 @@ public class GameController : MonoBehaviour
 
 	void Update ()
 	{
-		if (Input.GetKeyDown (KeyCode.Space) && !gaming) {
+		if (Input.GetKeyDown (KeyCode.Space) && !gaming && !endedGame) {
 			gaming = true;
 			spawnCubes ();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Space)&& endedGame){
+			Application.LoadLevel(1);
 		}
 	}
 

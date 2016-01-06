@@ -65,7 +65,7 @@ public class CubeBehaviours : MonoBehaviour
 		catchRadius = relateSpeed * catchRadiusParam;
 		force = relateSpeed * forceParam;
 
-		massCore.GetComponent<Rigidbody> ().AddForce (relateSpeed * 200 * (massCore.transform.position - transform.position).normalized, ForceMode.Impulse);
+		massCore.GetComponent<Rigidbody> ().AddForce (relateSpeed * 300 * (massCore.transform.position - transform.position).normalized, ForceMode.Impulse);
 
 //		Collider[] cols = Physics.OverlapSphere (transform.position, catchRadius);
 		Collider[] cols = runtimeCore.ccs.getSphere(gameObject,catchRadius);
