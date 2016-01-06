@@ -43,6 +43,25 @@ public class ISEditorTools : MonoBehaviour{
 
 	}
 
+	[MenuItem("SPINACH/Tools/Set Fixed Joint Break Force From Childrens",false,1)]
+	static void SetFixedJointBreakForce(){
+		GameObject rootObj = Selection.activeGameObject;
+		GameObject[] childrenTrans = ISEditorTools.GetChildren(rootObj);
+
+		ISEditorInputDialog.Display ("Break Force", "OK", (string v) => {
+			float force = float.Parse(v);
+			for (int i = 0; i < childrenTrans.Length; i++) {
+
+				FixedJoint[] joints = childrenTrans[i].gameObject.GetComponents<FixedJoint>();
+				foreach(FixedJoint joint in joints){
+					joint.breakForce = force;
+					joint.breakTorque = force;
+				}
+
+			}
+		});
+	}
+
 	static public GameObject[] GetChildren(GameObject obj){
 
 		int count = obj.transform.childCount;

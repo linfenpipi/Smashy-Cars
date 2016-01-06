@@ -23,6 +23,8 @@ public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 	public GameObject mainScreenObject;
 	public ISSCEUIFilePanel filePanel;
 	public Text title;
+	public Button placeButton;
+	public Button deleteButton;
 	public InputField blockSelector;
 	public ISSCECommandLineTools clt;
 	public ISSCBEditorCore core;
@@ -51,9 +53,6 @@ public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 	bool moving = false;
 	float length;
 	float radius;
-
-	public Text cubeWidth;
-	public Text sphereRadius;
 
 	void Start ()
 	{
@@ -167,6 +166,7 @@ public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 		stateTips.sprite = GetStateSprite ();
 		selectTipBlock.transform.position = ISSCBGrid.GridPositionToWorldPosition (core.CurrentSelection (), core.moniter.transform.position);
 
+		/*
 		if (userSelectionState == SelectionOperations.Cube) {
 			cubeWidth.enabled = true;
 			cubeWidth.text = "S :\t" + ((int)length).ToString () + " px";
@@ -180,6 +180,7 @@ public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 		} else {
 			sphereRadius.enabled = false;
 		}
+		*/
 	}
 
 	Sprite GetStateSprite ()
@@ -199,11 +200,15 @@ public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 	public void ChangeToPlacingState ()
 	{
 		userEditingState = EditingState.Placing;
+		placeButton.interactable = false;
+		deleteButton.interactable = true;
 	}
 
 	public void ChangeToDeletingState ()
 	{
 		userEditingState = EditingState.Deleting;
+		placeButton.interactable = true;
+		deleteButton.interactable = false;
 	}
 
 	public void ChangeToSelectingState ()
@@ -250,9 +255,7 @@ public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 
 	public void NewScene ()
 	{
-		Debug.Log ("new s");
 		core.NewScene (new ISSCBlockVector (21, 21, 21), "NewScene");
-		title.text = "BE 0.2.3 :" + core.data.name;
 	}
 
 	public void Save ()
@@ -264,7 +267,6 @@ public class ISSCBEditorDesktopUserInterface : MonoBehaviour
 	public void Load ()
 	{
 		core.OpenScene (Application.dataPath + "/Resources/SavedDatas/slot1");
-		title.text = "BE 0.2.3 :" + core.data.name;
 	}
 
 	public void ShowMainScreen ()

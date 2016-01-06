@@ -21,8 +21,9 @@ public class ISSCECommandLineTools : MonoBehaviour
 			string argu = command.Substring (command.IndexOf ("\"") + 1, command.LastIndexOf ("\"") - command.IndexOf ("\"") - 1);
 			core.OpenScene (Application.dataPath + "/Resources/SavedDatas/" + argu);
 		} else if (command.StartsWith ("new")) {
-			string argu = command.Substring (command.IndexOf ("\"") + 1, command.LastIndexOf ("\"") - command.IndexOf ("\"") - 1);
-			core.NewScene (new ISSCBlockVector (21, 21, 21), argu);
+			string[] argus = ParseArguments (command);
+			int size = int.Parse (argus [0]);
+			core.NewScene (new ISSCBlockVector (size, size, size), "New Scene");
 		} else if (command.StartsWith ("sphere")) {
 			string[] argus = ParseArguments (command);
 			ISSCBlockVector center = ParseBlockVector (argus [0]);
