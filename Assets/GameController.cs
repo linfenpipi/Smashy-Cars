@@ -51,6 +51,8 @@ public class GameController : MonoBehaviour
 						ccs.cubes [i, ii, iii] = Instantiate (setCube (id),getPosByIds(i,ii,iii),Quaternion.identity) as GameObject;
 						ccs.cubes [i,ii,iii].transform.parent = playersCarTs;
 						ccs.cubes [i,ii,iii].transform.localScale = Vector3.one*basicSize;
+						ccs.cubes [i,ii,iii].GetComponent<CubeBehaviours>().runtimeCore = GetComponent<GameController>();
+						ccs.cubes [i,ii,iii].GetComponent<CubeBehaviours>().massCore = playersCar.transform.parent.gameObject;
 					}
 				}
 			}

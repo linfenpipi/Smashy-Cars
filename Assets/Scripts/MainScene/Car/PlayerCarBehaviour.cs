@@ -17,7 +17,7 @@ public class PlayerCarBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		rb.MovePosition(transform.position-transform.right*speed*Time.deltaTime);
+		rb.AddForce(-transform.right*speed,ForceMode.Force);
 		if(gc.gaming){
 			playerControl();
 		}
