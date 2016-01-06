@@ -18,6 +18,7 @@ public class PlayerCarBehaviour : MonoBehaviour
 	void Start ()
 	{
 		rb = GetComponent<Rigidbody> ();
+
 	}
 	
 	// Update is called once per frame
@@ -55,20 +56,20 @@ public class PlayerCarBehaviour : MonoBehaviour
 	void GameEnd ()
 	{	
 		if(endPlayed){
-		gc.endedGame = true;
 		return;
 		}
 		endPlayed = true;
+		gc.endedGame = true;
 		gc.gaming = false;
-		GameObject[] cbs = gc.ccs.allExist;
-		for (int i = 0; i < cbs.Length; i++) {
-			cbs[i].tag = "Untagged";
-			cbs[i].GetComponent<Collider>().isTrigger = false;
+//		GameObject[] cbs = gc.ccs.allExist;
+		for (int i = 0; i < gc.ccs.allExist.Length; i++) {
+			gc.ccs.allExist[i].tag = "Untagged";
+			gc.ccs.allExist[i].GetComponent<Collider>().isTrigger = false;
 			Rigidbody rb;
-			if(cbs[i].GetComponent<Rigidbody>()!=null){
-				rb = cbs[i].GetComponent<Rigidbody>();
+			if(gc.ccs.allExist[i].GetComponent<Rigidbody>()!=null){
+				rb = gc.ccs.allExist[i].GetComponent<Rigidbody>();
 			}else{
-				rb = cbs [i].gameObject.AddComponent<Rigidbody> ();
+				rb = gc.ccs.allExist [i].gameObject.AddComponent<Rigidbody> ();
 			}
 			rb.drag = 0.12f;
 			rb.AddExplosionForce (20, transform.position, 5);

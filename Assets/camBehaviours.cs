@@ -27,7 +27,7 @@ public class camBehaviours : MonoBehaviour
 				timer = Time.time;
 			}
 			transform.localPosition = Vector3.Slerp (transform.localPosition, defaultPosition, (Time.time - timer)/2);
-			transform.localRotation = Quaternion.Slerp (transform.rotation, defaultRotation, (Time.time - timer)/2);
+			transform.localRotation = Quaternion.Slerp (transform.localRotation, defaultRotation, (Time.time - timer)/2);
 		}
 		lastGameState = gc.gaming;
 	}

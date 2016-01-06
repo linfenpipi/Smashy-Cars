@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
 		}
 
 
-		json = ISSCDGridFileUtilities.LoadFileAsJson (Application.dataPath + "/Resources/SavedDatas/", fileName);
+		json = ISSCDGridFileUtilities.LoadFileAsJson (Application.dataPath + "/Resources/", fileName);
 		ccs = new CarsCubes (int.Parse (json ["size"] ["x"].ToString ()), int.Parse (json ["size"] ["y"].ToString ()), int.Parse (json ["size"] ["z"].ToString ()));
 	}
 
@@ -44,7 +44,7 @@ public class GameController : MonoBehaviour
 		}
 
 		if(Input.GetKeyDown(KeyCode.Space)&& endedGame){
-			Application.LoadLevel(1);
+			Application.LoadLevel(0);
 		}
 	}
 
