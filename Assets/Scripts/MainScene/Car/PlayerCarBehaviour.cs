@@ -27,9 +27,10 @@ public class PlayerCarBehaviour : MonoBehaviour
 		GameEnd();
 		}
 		if (gc.gaming) {
+			rb.drag = 0.12f;
 			playerControl ();
 		}else{
-			transform.position = transform.position;
+			rb.drag = 5;
 		}
 	}
 
@@ -58,8 +59,9 @@ public class PlayerCarBehaviour : MonoBehaviour
 		}
 		endPlayed = true;
 		gc.gaming = false;
-		CubeBehaviours[] cbs = GetComponentsInChildren<CubeBehaviours> ();
+		GameObject[] cbs = gc.ccs.allExist;
 		for (int i = 0; i < cbs.Length; i++) {
+			cbs[i].tag = "Untagged";
 			cbs[i].GetComponent<Collider>().isTrigger = false;
 			Rigidbody rb;
 			if(cbs[i].GetComponent<Rigidbody>()!=null){
@@ -68,7 +70,7 @@ public class PlayerCarBehaviour : MonoBehaviour
 				rb = cbs [i].gameObject.AddComponent<Rigidbody> ();
 			}
 			rb.drag = 0.12f;
-			rb.AddExplosionForce (5, transform.position, 5);
+			rb.AddExplosionForce (20, transform.position, 5);
 		}
 	}
 
