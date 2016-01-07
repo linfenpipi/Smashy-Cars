@@ -121,8 +121,6 @@ public class ISBlockPrefabCreator : Editor {
 
 			FixedJoint[] joints = childrens [i].GetComponents<FixedJoint> ();
 			for (int j = 0; j < joints.Length; j++) {
-				joints [j].breakForce = 1000;
-				joints [j].breakTorque = 1000;
 
 				if (!joints [j].connectedBody)
 					DestroyImmediate (joints [j]);

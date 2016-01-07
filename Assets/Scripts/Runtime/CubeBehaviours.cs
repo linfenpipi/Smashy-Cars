@@ -62,7 +62,7 @@ public class CubeBehaviours : MonoBehaviour
 		float force;
 
 		relateSpeed = massCore.GetComponent<Rigidbody> ().velocity.magnitude;
-		catchRadius = relateSpeed * catchRadiusParam;
+		catchRadius = relateSpeed * catchRadiusParam * 5f;
 		force = relateSpeed * forceParam;
 
 		massCore.GetComponent<Rigidbody> ().AddForce (relateSpeed * 300 * (massCore.transform.position - transform.position).normalized, ForceMode.Impulse);
@@ -85,8 +85,6 @@ public class CubeBehaviours : MonoBehaviour
 				rb.AddExplosionForce (force, transform.position, catchRadius);
 			}
 		}
-
-		yield return null;
 
 		runtimeCore.supported = null;
 
