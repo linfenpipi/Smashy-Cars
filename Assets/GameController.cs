@@ -20,10 +20,14 @@ public class GameController : MonoBehaviour
 	public CubeBehaviours supported;
 	public bool endedGame = false;
 	Vector3 centerPos;
+	public bool canStartGame = false;
+	public float flyingTime = 1;
+	public float flyingDistance = 20;
 
 
 	void Start ()
 	{
+		Debug.Log(Screen.width + " " + Screen.height);
 		playersCarTs = playersCar.transform;
 		cubeList = ISSCDBlocksList.LoadList ();
 		allKindOfCubes = new GameObject[cubeList.blocks.Length];
@@ -39,12 +43,22 @@ public class GameController : MonoBehaviour
 		Debug.Log (centerPos);
 
 		spawnCubes ();
+		StartCoroutine (CanStartGame ());
+	}
+
+	IEnumerator CanStartGame ()
+	{
+		yield return new WaitForSeconds (flyingTime);
+		yield return new WaitForSeconds (1);
+		canStartGame = true;
+		yield return null;
 	}
 
 	void Update ()
 	{
-		if (Input.GetKeyDown (KeyCode.Space) && !gaming && !endedGame) {
+		if (Input.GetKeyDown (KeyCode.Space) && !gaming && !endedGame && canStartGame) {
 			gaming = true;
+
 		}
 
 		if (Input.GetKeyDown (KeyCode.Space) && endedGame) {
@@ -75,6 +89,7 @@ public class GameController : MonoBehaviour
 						cb.forceParam = 0.06f;
 						cb.startTargetPos = getPosByIds (i, ii, iii);
 						cb.timer = Time.time;
+						cb.flyingTime = flyingTime;
 					}
 				}
 			}
@@ -94,7 +109,7 @@ public class GameController : MonoBehaviour
 		v3 = getPosByIds (x, y, z);
 		Vector3 direction;
 		direction = v3 - centerPos;
-		return centerPos + (direction * 20);
+		return centerPos + (direction * flyingDistance);
 	}
 
 	public Vector3 getPosByIds (int x, int y, int z)

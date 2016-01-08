@@ -13,16 +13,20 @@ public class PlayerCarBehaviour : MonoBehaviour
 	Vector3 clamp;
 	public GameController gc;
 	public int hp = 500;
+	public int maxHp;
 	bool endPlayed = false;
+	public int driveDistance;
+	//	public float scoreTimer;
+	Vector3 startPos;
 
-	// Use this for initialization
 	void Start ()
 	{
 		rb = GetComponent<Rigidbody> ();
-
+		maxHp = hp;
+		startPos = transform.position;
 	}
-	
-	// Update is called once per frame
+
+
 	void FixedUpdate ()
 	{
 		if (hp <= 0) {
@@ -34,6 +38,11 @@ public class PlayerCarBehaviour : MonoBehaviour
 		} else {
 			rb.drag = 10;
 		}
+	}
+
+	void Update ()
+	{
+		driveDistance = (int)((transform.position - startPos).magnitude);
 	}
 
 	void playerControl ()
@@ -50,11 +59,11 @@ public class PlayerCarBehaviour : MonoBehaviour
 		if (f <= 0) {
 			horizonForce = horizonSpeed;
 		} else {
-			horizonForce = horizonSpeed / Mathf.Abs (f+1);
+			horizonForce = horizonSpeed / Mathf.Abs (f + 1);
 		}
 		if (Vector3.Dot (rb.velocity, transform.forward) < 0) {
 			rb.AddForce (transform.forward * Mathf.Abs (f * 2000), ForceMode.Force);
-		} else if(Vector3.Dot (rb.velocity, transform.forward) > 0){
+		} else if (Vector3.Dot (rb.velocity, transform.forward) > 0) {
 			rb.AddForce (-transform.forward * Mathf.Abs (f * 2000), ForceMode.Force);
 		}
 		rb.AddForce (transform.forward * horizonAxis * horizonForce, ForceMode.Force);
@@ -71,11 +80,18 @@ public class PlayerCarBehaviour : MonoBehaviour
 		}
 	}
 
+	//	void OnTriggerEnter(Collider other){
+	//	if(other.CompareTag("ScoreTrigger")){
+	//		score ++;
+	//	}
+	//	}
+
 	void GameEnd ()
 	{	
 		if (endPlayed) {
 			return;
 		}
+		hp = 0;
 		endPlayed = true;
 		gc.endedGame = true;
 		gc.gaming = false;

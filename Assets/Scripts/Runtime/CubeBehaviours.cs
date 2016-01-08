@@ -14,6 +14,7 @@ public class CubeBehaviours : MonoBehaviour
 	bool atPos = false;
 	public Vector3 startTargetPos;
 	public float timer;
+	public float flyingTime;
 
 
 	// Use this for initialization
@@ -31,7 +32,7 @@ public class CubeBehaviours : MonoBehaviour
 	void Update ()
 	{
 		if(!atPos){
-		transform.position = Vector3.Slerp(transform.position,startTargetPos,Time.time - timer);
+			transform.position = Vector3.Slerp(transform.position,startTargetPos,(Time.time - timer)/flyingTime);
 		}
 
 		if(transform.position == startTargetPos){
