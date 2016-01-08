@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
 	public bool gaming = false;
 	public CubeBehaviours supported;
 	public bool endedGame = false;
-
+	Vector3 centerPos;
 
 
 	void Start ()
@@ -34,17 +34,21 @@ public class GameController : MonoBehaviour
 
 		json = ISSCDGridFileUtilities.LoadFileAsJson (Application.dataPath + "/Resources/", fileName);
 		ccs = new CarsCubes (int.Parse (json ["size"] ["x"].ToString ()), int.Parse (json ["size"] ["y"].ToString ()), int.Parse (json ["size"] ["z"].ToString ()));
+		originPos = getOriginPos ();
+		centerPos = getPosByIds (ccs.sizeX / 2, ccs.sizeY / 2, ccs.sizeZ / 2);
+		Debug.Log (centerPos);
+
+		spawnCubes ();
 	}
 
 	void Update ()
 	{
 		if (Input.GetKeyDown (KeyCode.Space) && !gaming && !endedGame) {
 			gaming = true;
-			spawnCubes ();
 		}
 
-		if(Input.GetKeyDown(KeyCode.Space)&& endedGame){
-			Application.LoadLevel(0);
+		if (Input.GetKeyDown (KeyCode.Space) && endedGame) {
+			Application.LoadLevel (0);
 		}
 	}
 
@@ -52,14 +56,14 @@ public class GameController : MonoBehaviour
 	{
 //		playersCar.transform.parent.position += Vector3.up * (basicSize * (float)ccs.sizeY / 2 + 1);
 //		playersCar.transform.parent.GetComponent<Collider>().isTrigger = true;
-		originPos = getOriginPos ();
+		
 		for (int i = 0; i < ccs.sizeX; i++) {
 			for (int ii = 0; ii < ccs.sizeY; ii++) {
 				for (int iii = 0; iii < ccs.sizeZ; iii++) {
 //					Debug.Log(i * ccs.sizeX + ii * ccs.sizeY + iii);
 					int id = int.Parse (json ["blocks"] [(i * ccs.sizeX * ccs.sizeY + ii * ccs.sizeY + iii).ToString ()].ToString ());
 					if (id >= 2) {
-						ccs.cubes [i, ii, iii] = Instantiate (setCube (id), getPosByIds (i, ii, iii), Quaternion.identity) as GameObject;
+						ccs.cubes [i, ii, iii] = Instantiate (setCube (id), GetStartPosByIds (i, ii, iii), Quaternion.identity) as GameObject;
 						ccs.cubes [i, ii, iii].transform.parent = playersCarTs;
 						ccs.cubes [i, ii, iii].transform.localScale = Vector3.one * basicSize;
 						Destroy (ccs.cubes [i, ii, iii].GetComponent<ISSCBlock> ());
@@ -69,11 +73,13 @@ public class GameController : MonoBehaviour
 						cb.droped = false;
 						cb.catchRadiusParam = 0.0625f;
 						cb.forceParam = 0.06f;
+						cb.startTargetPos = getPosByIds (i, ii, iii);
+						cb.timer = Time.time;
 					}
 				}
 			}
 		}
-		ccs.getAllExist();
+		ccs.getAllExist ();
 //		playersCarTs.localScale = Vector3.one*basicSize;
 	}
 
@@ -82,7 +88,16 @@ public class GameController : MonoBehaviour
 		return allKindOfCubes [id];
 	}
 
-	Vector3 getPosByIds (int x, int y, int z)
+	Vector3 GetStartPosByIds (int x, int y, int z)
+	{
+		Vector3 v3;
+		v3 = getPosByIds (x, y, z);
+		Vector3 direction;
+		direction = v3 - centerPos;
+		return centerPos + (direction * 20);
+	}
+
+	public Vector3 getPosByIds (int x, int y, int z)
 	{
 		return new Vector3 (
 			originPos.x - (float)x * basicSize,
@@ -177,7 +192,7 @@ public class CarsCubes
 				}
 			}
 		}
-		allExist = gos.ToArray();
+		allExist = gos.ToArray ();
 		return allExist;
 	}
 }

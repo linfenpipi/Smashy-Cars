@@ -11,6 +11,11 @@ public class CubeBehaviours : MonoBehaviour
 	public float catchRadiusParam;
 	public float forceParam;
 
+	bool atPos = false;
+	public Vector3 startTargetPos;
+	public float timer;
+
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -18,11 +23,21 @@ public class CubeBehaviours : MonoBehaviour
 //		Destroy (GetComponent<Rigidbody> ());
 		GetComponent<Rigidbody> ().isKinematic = true;
 		GetComponent<Collider> ().isTrigger = true;
+
+
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+		if(!atPos){
+		transform.position = Vector3.Slerp(transform.position,startTargetPos,Time.time - timer);
+		}
+
+		if(transform.position == startTargetPos){
+		atPos = true;
+		}
+
 		if (droped && !hpDecreased) {
 			hpDecreased = true;
 			massCore.GetComponent<PlayerCarBehaviour> ().hp--;
