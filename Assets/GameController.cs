@@ -50,7 +50,7 @@ public class GameController : MonoBehaviour
 
 	void spawnCubes ()
 	{
-		playersCar.transform.parent.position += Vector3.up * (basicSize * (float)ccs.sizeY / 2 + 1);
+//		playersCar.transform.parent.position += Vector3.up * (basicSize * (float)ccs.sizeY / 2 + 1);
 //		playersCar.transform.parent.GetComponent<Collider>().isTrigger = true;
 		originPos = getOriginPos ();
 		for (int i = 0; i < ccs.sizeX; i++) {
